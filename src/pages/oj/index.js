@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from '../../store'
+import store from '@/store'
 import ViewUI from 'view-design';
 import i18n from '@/i18n'
 import 'view-design/dist/styles/iview.css';
 import Panel from '@oj/components/Panel.vue'
-
+import '@/styles/index.less'
 
 Vue.config.productionTip = false
 

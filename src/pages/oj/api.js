@@ -28,7 +28,7 @@ export default {
     })
   },
   checkUsernameOrEmail(username, email) {
-    return ajax('check_username_or_email', 'post', {
+    return ajax('user/check_username_or_email', 'post', {
       data: {
         username,
         email
@@ -48,7 +48,7 @@ export default {
     return ajax('captcha', 'get')
   },
   getUserInfo(username = undefined) {
-    return ajax('profile', 'get', {
+    return ajax('profile/getInfo', 'get', {
       params: {
         username
       }
@@ -292,7 +292,7 @@ function ajax(url, method, options) {
       data
     }).then(res => {
       // API正常返回(status=20x), 是否错误通过有无error判断
-      console.log(res.data)
+      console.log(res)
       if (res.data.error !== null) {
         Vue.prototype.$error(res.data.message)
         reject(res)
@@ -309,7 +309,8 @@ function ajax(url, method, options) {
     }, res => {
       // API请求异常，一般为Server error 或 network error
       reject(res)
-      Vue.prototype.$error(res.data.message)
+      console.log(res)
+      Vue.prototype.$error(res.message)
     })
   })
 }

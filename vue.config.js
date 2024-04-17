@@ -18,6 +18,11 @@ const pages = {
 module.exports = defineConfig({
   pages: pages,
   transpileDependencies: true,
+  devServer: {
+    client: {
+      overlay: false
+    }
+  },
   configureWebpack: {
     resolve: {
       alias: {

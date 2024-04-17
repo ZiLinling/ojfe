@@ -8,20 +8,20 @@
       </FormItem>
       <FormItem prop="email">
         <Input v-model="formRegister.email" :placeholder="$t('m.Email_Address')" size="large" @on-enter="handleRegister">
-        <Icon type="ios-email-outline" slot="prepend"></Icon>
+        <Icon type="ios-mail-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
       <FormItem prop="password">
         <Input type="password" v-model="formRegister.password" :placeholder="$t('m.RegisterPassword')" size="large" @on-enter="handleRegister">
-        <Icon type="ios-locked-outline" slot="prepend"></Icon>
+        <Icon type="ios-lock-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
       <FormItem prop="passwordAgain">
         <Input type="password" v-model="formRegister.passwordAgain" :placeholder="$t('m.Password_Again')" size="large" @on-enter="handleRegister">
-        <Icon type="ios-locked-outline" slot="prepend"></Icon>
+        <Icon type="ios-lock-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
-      <FormItem prop="captcha" style="margin-bottom:10px">
+      <!-- <FormItem prop="captcha" style="margin-bottom:10px">
         <div class="oj-captcha">
           <div class="oj-captcha-code">
             <Input v-model="formRegister.captcha" :placeholder="$t('m.Captcha')" size="large" @on-enter="handleRegister">
@@ -34,7 +34,7 @@
             </Tooltip>
           </div>
         </div>
-      </FormItem>
+      </FormItem> -->
     </Form>
     <div class="footer">
       <Button
@@ -45,7 +45,7 @@
         {{$t('m.UserRegister')}}
       </Button>
       <Button
-        type="ghost"
+        type="default"
         @click="switchMode('login')"
         class="btn" long>
         {{$t('m.Already_Registed')}}
@@ -62,7 +62,7 @@
   export default {
     mixins: [FormMixin],
     mounted () {
-      this.getCaptchaSrc()
+      // this.getCaptchaSrc()
     },
     data () {
       const CheckUsernameNotExist = (rule, value, callback) => {
@@ -105,7 +105,7 @@
           password: '',
           passwordAgain: '',
           email: '',
-          captcha: ''
+          // captcha: ''
         },
         ruleRegister: {
           username: [
@@ -123,9 +123,9 @@
           passwordAgain: [
             {required: true, validator: CheckAgainPassword, trigger: 'change'}
           ],
-          captcha: [
-            {required: true, trigger: 'blur', min: 1, max: 10}
-          ]
+          // captcha: [
+          //   {required: true, trigger: 'blur', min: 1, max: 10}
+          // ]
         }
       }
     },
@@ -147,8 +147,8 @@
             this.switchMode('login')
             this.btnRegisterLoading = false
           }, _ => {
-            this.getCaptchaSrc()
-            this.formRegister.captcha = ''
+            // this.getCaptchaSrc()
+            // this.formRegister.captcha = ''
             this.btnRegisterLoading = false
           })
         })
