@@ -49,7 +49,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['changeModalStatus', 'getProfile']),
+    ...mapActions(['changeModalStatus', 'getProfile', 'getToken']),
     handleBtnClick(mode) {
       this.changeModalStatus({
         mode,
@@ -60,10 +60,12 @@ export default {
       this.validateForm('formLogin').then(valid => {
         this.btnLoginLoading = true
         let formData = Object.assign({}, this.formLogin)
+        formData.password = this.$md5(this.$md5(formData.password))
         api.login(formData).then(res => {
           this.btnLoginLoading = false
           this.changeModalStatus({ visible: false })
           this.getProfile()
+          this.getToken(res.data.data)
           this.$success(this.$i18n.t('m.Welcome_back'))
         }, _ => {
           this.btnLoginLoading = false

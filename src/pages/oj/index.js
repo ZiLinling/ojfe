@@ -7,6 +7,7 @@ import i18n from '@/i18n'
 import 'view-design/dist/styles/iview.css';
 import Panel from '@oj/components/Panel.vue'
 import '@/styles/index.less'
+import md5 from 'js-md5';
 
 Vue.config.productionTip = false
 
@@ -22,6 +23,8 @@ Vue.prototype.$Message.config({
 Vue.prototype.$error = (s) => Vue.prototype.$Message.error(s)
 Vue.prototype.$info = (s) => Vue.prototype.$Message.info(s)
 Vue.prototype.$success = (s) => Vue.prototype.$Message.success(s)
+
+Vue.prototype.$md5 = md5;
 
 new Vue({
   router,

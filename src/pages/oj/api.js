@@ -37,20 +37,23 @@ export default {
   },
   // 注册
   register(data) {
-    return ajax('register', 'post', {
+    return ajax('user/register', 'post', {
       data
     })
   },
   logout() {
-    return ajax('logout', 'get')
+    return ajax('user/logout', 'get')
   },
-  getCaptcha() {
-    return ajax('captcha', 'get')
+  getCaptcha(email) {
+    return ajax('user/captcha', 'get', {
+      params: {
+        email
+      }
+    })
   },
-  getUserInfo(username = undefined) {
+  getUserInfo() {
     return ajax('profile/getInfo', 'get', {
       params: {
-        username
       }
     })
   },
@@ -314,3 +317,29 @@ function ajax(url, method, options) {
     })
   })
 }
+
+axios.interceptors.request.use(
+  config => {
+    let token = store.state.token
+    if (token) {
+      config.headers.token = token;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  });
+
+// axios.interceptors.response.use(
+//   config => {
+//     if (storage.get('token')) {
+//       storage.remove('token')
+//       return config;
+//     }
+//     if (config.data.statusCode != 200)
+//       return Promise.reject(config.data);
+//     return config;
+//   },
+//   error => {
+//     return Promise.reject(error);
+//   });

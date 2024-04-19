@@ -1,5 +1,6 @@
 
-import Home from '../views/general/Home.vue'
+import Home from '@oj/views/general/Home.vue'
+import Logout from '@oj/views/user/Logout.vue'
 
 
 export default [
@@ -8,6 +9,12 @@ export default [
     path: '/',
     meta: {title: 'Home'},
     component: Home
+  },
+  {
+    name: 'logout',
+    path: '/logout',
+    meta: {title: 'Logout'},
+    component: Logout
   },
 ]
 

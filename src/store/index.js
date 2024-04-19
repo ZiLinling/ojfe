@@ -4,6 +4,7 @@ import user from './modules/user'
 import contest from './modules/contest'
 import api from '@oj/api'
 import types from './types'
+import storage from '@/utils/storage'
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
@@ -13,7 +14,8 @@ const rootState = {
   modalStatus: {
     mode: 'login', // or 'register',
     visible: false
-  }
+  },
+  token:storage.get("token"),
 }
 
 const rootGetters = {
@@ -22,6 +24,9 @@ const rootGetters = {
   },
   'modalStatus' (state) {
     return state.modalStatus
+  },
+  'token'(state){
+    return state.token
   }
 }
 
@@ -36,7 +41,11 @@ const rootMutations = {
     if (visible !== undefined) {
       state.modalStatus.visible = visible
     }
-  }
+  },
+  [types.CHANGE_TOKEN] (state, token) {
+    state.token = token
+    console.log(state.token)
+  },
 }
 
 const rootActions = {
@@ -56,6 +65,10 @@ const rootActions = {
     } else {
       window.document.title = state.website.website_name_shortcut + ' | ' + state.route.meta.title
     }
+  },
+  getToken ({commit}, token) {
+    storage.set('token', token);
+    commit(types.CHANGE_TOKEN, token)
   }
 }
 
