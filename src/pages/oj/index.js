@@ -9,7 +9,19 @@ import Panel from '@oj/components/Panel.vue'
 import '@/styles/index.less'
 import md5 from 'js-md5';
 
+import highlight from '@/plugins/highlight'
+import katex from '@/plugins/katex'
+import filters from '@/utils/filters.js'
+
 Vue.config.productionTip = false
+
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+
+Vue.use(highlight)
+Vue.use(katex)
 
 Vue.use(ViewUI, {
   i18n: (key, value) => i18n.t(key, value)

@@ -64,8 +64,8 @@ export default {
         api.login(formData).then(res => {
           this.btnLoginLoading = false
           this.changeModalStatus({ visible: false })
-          this.getProfile()
           this.getToken(res.data.data)
+          this.getProfile()
           this.$success(this.$i18n.t('m.Welcome_back'))
         }, _ => {
           this.btnLoginLoading = false

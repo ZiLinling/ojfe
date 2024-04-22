@@ -8,6 +8,7 @@
     mounted () {
       api.logout().then(res => {
         this.$store.dispatch('clearProfile')
+        this.$store.dispatch('clearToken')
         this.$router.replace({
           path: '/'
         })

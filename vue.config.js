@@ -4,19 +4,22 @@ const path = require('path')
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
-const pages = {
-  oj: {
-    entry: "./src/pages/oj/index.js",
-    template: "./public/index.html",
-    filename: "index.html",
-    title: "oj"
-  },
-  // admin: {
-  //   entry: './src/pages/admin/index.js',
-  // },
-}
+
 module.exports = defineConfig({
-  pages: pages,
+  pages: {
+    oj: {
+      entry: "./src/pages/oj/index.js",
+      template: "./public/index.html",
+      filename: "index.html",
+      title: "oj"
+    },
+    admin: {
+      entry: "./src/pages/admin/index.js",
+      template: "./src/pages/admin/index.html",
+      filename: "admin.html",
+      title: "admin"
+    }
+  },
   transpileDependencies: true,
   devServer: {
     client: {

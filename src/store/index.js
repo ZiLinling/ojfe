@@ -44,7 +44,7 @@ const rootMutations = {
   },
   [types.CHANGE_TOKEN] (state, token) {
     state.token = token
-    console.log(state.token)
+    storage.set('token', token);
   },
 }
 
@@ -67,8 +67,10 @@ const rootActions = {
     }
   },
   getToken ({commit}, token) {
-    storage.set('token', token);
     commit(types.CHANGE_TOKEN, token)
+  },
+  clearToken({ commit }) {
+    commit(types.CHANGE_TOKEN, null)
   }
 }
 

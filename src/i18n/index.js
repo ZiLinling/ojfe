@@ -12,9 +12,9 @@ import elzhTW from 'element-ui/lib/locale/lang/zh-TW'
 Vue.use(VueI18n)
 
 const languages = [
-  {value: 'en-US', label: 'English', iv: ivenUS, el: elenUS},
-  {value: 'zh-CN', label: '简体中文', iv: ivzhCN, el: elzhCN},
-  {value: 'zh-TW', label: '繁體中文', iv: ivzhTW, el: elzhTW}
+  { value: 'en-US', label: 'English', iv: ivenUS, el: elenUS },
+  { value: 'zh-CN', label: '简体中文', iv: ivzhCN, el: elzhCN },
+  { value: 'zh-TW', label: '繁體中文', iv: ivzhTW, el: elzhTW }
 ]
 const messages = {}
 
@@ -24,12 +24,12 @@ for (let lang of languages) {
   let m = require(`./oj/${locale}`).m
   Object.assign(m, require(`./admin/${locale}`).m)
   let ui = Object.assign(lang.iv, lang.el)
-  messages[locale] = Object.assign({m: m}, ui)
+  messages[locale] = Object.assign({ m: m }, ui)
 }
 // load language packages
 export default new VueI18n({
-  locale: 'en-US',
+  locale: 'zh-CN',
   messages: messages
 })
 
-export {languages}
+export { languages }

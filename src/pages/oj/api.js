@@ -128,7 +128,7 @@ export default {
         params[element] = searchParams[element]
       }
     })
-    return ajax('problem', 'get', {
+    return ajax('problem/page', 'get', {
       params: params
     })
   },
@@ -295,14 +295,14 @@ function ajax(url, method, options) {
       data
     }).then(res => {
       // API正常返回(status=20x), 是否错误通过有无error判断
-      console.log(res)
       if (res.data.error !== null) {
         Vue.prototype.$error(res.data.message)
         reject(res)
-        // 若后端返回为登录，则为session失效，应退出当前登录用户
-        // if (res.data.data.startsWith('Please login')) {
-        //   store.dispatch('changeModalStatus', { 'mode': 'login', 'visible': true })
-        // }
+        //如果后端返回Token过期，则需要重新登录
+        if (res.data.message == "Token Expired") {
+          store.dispatch('clearProfile')
+          store.dispatch('clearToken')
+        }
       } else {
         resolve(res)
         // if (method !== 'get') {
@@ -312,7 +312,6 @@ function ajax(url, method, options) {
     }, res => {
       // API请求异常，一般为Server error 或 network error
       reject(res)
-      console.log(res)
       Vue.prototype.$error(res.message)
     })
   })
@@ -332,11 +331,8 @@ axios.interceptors.request.use(
 
 // axios.interceptors.response.use(
 //   config => {
-//     if (storage.get('token')) {
-//       storage.remove('token')
-//       return config;
-//     }
-//     if (config.data.statusCode != 200)
+//     console.log(config.data)
+//     if (data.error !== null)
 //       return Promise.reject(config.data);
 //     return config;
 //   },

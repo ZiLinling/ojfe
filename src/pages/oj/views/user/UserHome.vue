@@ -17,15 +17,15 @@
         <div class="flex-container">
           <div class="left">
             <p>{{$t('m.UserHomeSolved')}}</p>
-            <p class="emphasis">{{profile.accepted_number}}</p>
+            <p class="emphasis">{{profile.acceptedNumber}}</p>
           </div>
           <div class="middle">
             <p>{{$t('m.UserHomeserSubmissions')}}</p>
-            <p class="emphasis">{{profile.submission_number}}</p>
+            <p class="emphasis">{{profile.submissionNumber}}</p>
           </div>
           <div class="right">
             <p>{{$t('m.UserHomeScore')}}</p>
-            <p class="emphasis">{{profile.total_score}}</p>
+            <p class="emphasis">{{profile.totalScore}}</p>
           </div>
         </div>
         <div id="problems">
@@ -61,15 +61,13 @@
   </div>
 </template>
 <script>
-  import { mapActions } from 'vuex'
+  import { mapActions,mapGetters } from 'vuex'
   import time from '@/utils/time'
   import api from '@oj/api'
 
   export default {
     data () {
       return {
-        username: '',
-        profile: {},
         problems: []
       }
     },
@@ -79,14 +77,10 @@
     methods: {
       ...mapActions(['changeDomTitle']),
       init () {
-        this.username = this.$route.query.username
-        api.getUserInfo(this.username).then(res => {
-          this.changeDomTitle({title: res.data.data.user.username})
-          this.profile = res.data.data
-          this.getSolvedProblems()
-          let registerTime = time.utcToLocal(this.profile.user.create_time, 'YYYY-MM-D')
+        this.changeDomTitle({title: this.profile.user.username})
+        this.getSolvedProblems()
+        let registerTime = time.utcToLocal(this.profile.user.create_time, 'YYYY-MM-D')
           console.log('The guy registered at ' + registerTime + '.')
-        })
       },
       getSolvedProblems () {
         let ACMProblems = this.profile.acm_problems_status.problems || {}
@@ -114,6 +108,7 @@
       }
     },
     computed: {
+      ...mapGetters(['profile']),
       refreshVisible () {
         if (!this.username) return true
         if (this.username && this.username === this.$store.getters.user.username) return true
