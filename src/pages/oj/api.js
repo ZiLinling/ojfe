@@ -8,17 +8,15 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
 
 export default {
-  getWebsiteConf(params) {
-    return ajax('website', 'get', {
-      params
-    })
+  getWebsiteConf() {
+    return ajax('config/website', 'get')
   },
-  getAnnouncementList(offset, limit) {
+  getAnnouncementList(page, limit) {
     let params = {
-      offset: offset,
+      page: page,
       limit: limit
     }
-    return ajax('announcement', 'get', {
+    return ajax('announcement/list', 'get', {
       params
     })
   },
@@ -52,10 +50,7 @@ export default {
     })
   },
   getUserInfo() {
-    return ajax('profile/getInfo', 'get', {
-      params: {
-      }
-    })
+    return ajax('profile', 'get')
   },
   updateProfile(profile) {
     return ajax('profile', 'put', {
@@ -112,24 +107,14 @@ export default {
     })
   },
   getLanguages() {
-    return ajax('languages', 'get')
+    return ajax('config/languages', 'get')
   },
   getProblemTagList() {
-    return ajax('problem/tags', 'get')
+    return ajax('tag/list', 'get')
   },
-  getProblemList(offset, limit, searchParams) {
-    let params = {
-      paging: true,
-      offset,
-      limit
-    }
-    Object.keys(searchParams).forEach((element) => {
-      if (searchParams[element]) {
-        params[element] = searchParams[element]
-      }
-    })
-    return ajax('problem/page', 'get', {
-      params: params
+  getProblemList(searchParams) {
+    return ajax('problem/list', 'get', {
+      params: searchParams
     })
   },
   pickone() {
@@ -138,13 +123,13 @@ export default {
   getProblem(problemID) {
     return ajax('problem', 'get', {
       params: {
-        problem_id: problemID
+        displayId: problemID
       }
     })
   },
-  getContestList(offset, limit, searchParams) {
+  getContestList(page, limit, searchParams) {
     let params = {
-      offset,
+      page,
       limit
     }
     if (searchParams !== undefined) {
@@ -154,7 +139,7 @@ export default {
         }
       })
     }
-    return ajax('contests', 'get', {
+    return ajax('contest/list', 'get', {
       params
     })
   },

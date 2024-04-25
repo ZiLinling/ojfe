@@ -8,7 +8,7 @@
           <li>
             <Dropdown @on-click="filterByDifficulty">
               <span>{{ query.difficulty === '' ? this.$i18n.t('m.Difficulty') : this.$i18n.t('m.' + query.difficulty) }}
-                <Icon type="arrow-down-b"></Icon>
+                <Icon type="md-arrow-dropdown"></Icon>
               </span>
               <Dropdown-menu slot="list">
                 <Dropdown-item name="">{{ $t('m.All') }}</Dropdown-item>
@@ -25,8 +25,8 @@
             </i-switch>
           </li>
           <li>
-            <Input v-model="query.keyword" @on-enter="filterByKeyword" @on-click="filterByKeyword" placeholder="keyword"
-              icon="ios-search-strong" />
+            <Input v-model="query.keyword" @on-enter="filterByKeyword" @on-click="filterByKeyword"
+              placeholder="keyword" />
           </li>
           <li>
             <Button type="info" @click="onReset">
@@ -37,7 +37,7 @@
         </ul>
       </div>
       <Table style="width: 100%; font-size: 16px;" :columns="problemTableColumns" :data="problemList"
-        :loading="loadings.table" disabled-hover></Table>
+        :loading="loadings.table" disabled-hover ></Table>
     </Panel>
     <Pagination :total="total" :page-size.sync="query.limit" @on-change="pushRouter" @on-page-size-change="pushRouter"
       :current.sync="query.page" :show-sizer="true"></Pagination>
@@ -47,7 +47,7 @@
     <Col :span="5">
     <Panel :padding="10">
       <div slot="title" class="taglist-title">{{ $t('m.Tags') }}</div>
-      <Button v-for="tag in tagList" :key="tag.name" @click="filterByTag(tag.name)" type="ghost"
+      <Button v-for="tag in tagList" :key="tag.name" @click="filterByTag(tag.name)" type="default"
         :disabled="query.tag === tag.name" shape="circle" class="tag-btn">{{ tag.name }}
       </Button>
 
@@ -110,7 +110,11 @@ export default {
               },
               on: {
                 click: () => {
-                  this.$router.push({ name: 'problem-details', params: { problemID: params.row._id } })
+                  let routeUrl = this.$router.resolve({
+                    name: 'problem-details',
+                    params: { problemID: params.row._id }
+                  });
+                  window.open(routeUrl.href, '_blank');
                 }
               },
               style: {
@@ -138,12 +142,12 @@ export default {
         },
         {
           title: this.$i18n.t('m.Total'),
-          key: 'submissionNumber'
+          key: 'submission_number'
         },
         {
           title: this.$i18n.t('m.AC_Rate'),
           render: (h, params) => {
-            return h('span', this.getACRate(params.row.acceptedNumber, params.row.submissionNumber))
+            return h('span', this.getACRate(params.row.accepted_number, params.row.submission_number))
           }
         }
       ],
@@ -191,9 +195,8 @@ export default {
       })
     },
     getProblemList() {
-      let offset = (this.query.page - 1) * this.query.limit
       this.loadings.table = true
-      api.getProblemList(offset, this.limit, this.query).then(res => {
+      api.getProblemList(this.query).then(res => {
         this.loadings.table = false
         this.total = res.data.data.totalRow
         this.problemList = res.data.data.records
@@ -233,8 +236,9 @@ export default {
             title: this.$i18n.t('m.Tags'),
             align: 'center',
             render: (h, params) => {
+              let tagList = params.row.tags.split(",")
               let tags = []
-              params.row.tags.forEach(tag => {
+              tagList.forEach(tag => {
                 tags.push(h('Tag', {}, tag))
               })
               return h('div', {

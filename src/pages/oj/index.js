@@ -4,14 +4,32 @@ import router from './router'
 import store from '@/store'
 import ViewUI from 'view-design';
 import i18n from '@/i18n'
-import 'view-design/dist/styles/iview.css';
-import Panel from '@oj/components/Panel.vue'
-import '@/styles/index.less'
+import VueClipboard from 'vue-clipboard2'
 import md5 from 'js-md5';
+
+import 'view-design/dist/styles/iview.css';
+import '@/styles/index.less'
+
 
 import highlight from '@/plugins/highlight'
 import katex from '@/plugins/katex'
 import filters from '@/utils/filters.js'
+
+import VerticalMenu from '@oj/components/verticalMenu/verticalMenu.vue'
+import VerticalMenuItem from '@oj/components/verticalMenu/verticalMenu-item.vue'
+import Panel from '@oj/components/Panel.vue'
+
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/title'
+import 'echarts/lib/component/grid'
+import 'echarts/lib/component/dataZoom'
+import 'echarts/lib/component/legend'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/toolbox'
+import 'echarts/lib/component/markPoint'
 
 Vue.config.productionTip = false
 
@@ -20,12 +38,17 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+Vue.use(VueClipboard)
 Vue.use(highlight)
 Vue.use(katex)
 
 Vue.use(ViewUI, {
   i18n: (key, value) => i18n.t(key, value)
 });
+
+Vue.component('ECharts', ECharts)
+Vue.component(VerticalMenu.name, VerticalMenu)
+Vue.component(VerticalMenuItem.name, VerticalMenuItem)
 Vue.component(Panel.name, Panel)
 
 // 注册全局消息提示
@@ -38,9 +61,5 @@ Vue.prototype.$success = (s) => Vue.prototype.$Message.success(s)
 
 Vue.prototype.$md5 = md5;
 
-new Vue({
-  router,
-  store,
-  i18n,
-  render: h => h(App)
-}).$mount('#app')
+new Vue(Vue.util.extend({router, store, i18n}, App)).$mount('#app')
+

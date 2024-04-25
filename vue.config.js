@@ -28,10 +28,12 @@ module.exports = defineConfig({
   },
   configureWebpack: {
     resolve: {
+      extensions: ['.js', '.vue', '.json'],
       alias: {
         '@': resolve('src'),
         '@oj': resolve('src/pages/oj'),
-        '@admin': resolve('src/pages/admin')
+        '@admin': resolve('src/pages/admin'),
+        '~': resolve('src/components')
       }
     }
   },

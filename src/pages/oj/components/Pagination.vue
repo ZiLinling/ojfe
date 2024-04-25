@@ -59,4 +59,5 @@
   .ivu-page-options-sizer {
     min-width: 85px;
   }
+
 </style>

@@ -3,25 +3,25 @@ import storage from '@/utils/storage'
 import { STORAGE_KEY } from '@/utils/constants'
 import ojAPI from '@oj/api'
 
-function submissionMemoryFormat (memory) {
+function submissionMemoryFormat(memory) {
   if (memory === undefined) return '--'
   // 1048576 = 1024 * 1024
   let t = parseInt(memory) / 1048576
   return String(t.toFixed(0)) + 'MB'
 }
 
-function submissionTimeFormat (time) {
+function submissionTimeFormat(time) {
   if (time === undefined) return '--'
   return time + 'ms'
 }
 
-function getACRate (acCount, totalCount) {
+function getACRate(acCount, totalCount) {
   let rate = totalCount === 0 ? 0.00 : (acCount / totalCount * 100).toFixed(2)
   return String(rate) + '%'
 }
 
 // 去掉值为空的项，返回object
-function filterEmptyValue (object) {
+function filterEmptyValue(object) {
   let query = {}
   Object.keys(object).forEach(key => {
     if (object[key] || object[key] === 0 || object[key] === false) {
@@ -32,7 +32,7 @@ function filterEmptyValue (object) {
 }
 
 // 按指定字符数截断添加换行，非英文字符按指定字符的半数截断
-function breakLongWords (value, length = 16) {
+function breakLongWords(value, length = 16) {
   let re
   if (escape(value).indexOf('%u') === -1) {
     // 没有中文
@@ -44,9 +44,9 @@ function breakLongWords (value, length = 16) {
   return value.replace(re, '$1\n')
 }
 
-function downloadFile (url) {
+function downloadFile(url) {
   return new Promise((resolve, reject) => {
-    Vue.prototype.$http.get(url, {responseType: 'blob'}).then(resp => {
+    Vue.prototype.$http.get(url, { responseType: 'blob' }).then(resp => {
       let headers = resp.headers
       if (headers['content-type'].indexOf('json') !== -1) {
         let fr = new window.FileReader()
@@ -63,22 +63,22 @@ function downloadFile (url) {
             Vue.prototype.$error('Invalid file format')
           }
         }
-        let b = new window.Blob([resp.data], {type: 'application/json'})
+        let b = new window.Blob([resp.data], { type: 'application/json' })
         fr.readAsText(b)
         return
       }
       let link = document.createElement('a')
-      link.href = window.URL.createObjectURL(new window.Blob([resp.data], {type: headers['content-type']}))
+      link.href = window.URL.createObjectURL(new window.Blob([resp.data], { type: headers['content-type'] }))
       link.download = (headers['content-disposition'] || '').split('filename=')[1]
       document.body.appendChild(link)
       link.click()
       link.remove()
       resolve()
-    }).catch(() => {})
+    }).catch(() => { })
   })
 }
 
-function getLanguages () {
+function getLanguages() {
   return new Promise((resolve, reject) => {
     let languages = storage.get(STORAGE_KEY.languages)
     if (languages) {

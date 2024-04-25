@@ -70,10 +70,10 @@ export default {
     },
     getAnnouncementList (page = 1) {
       this.btnLoading = true
-      api.getAnnouncementList((page - 1) * this.limit, this.limit).then(res => {
+      api.getAnnouncementList(page, this.limit).then(res => {
         this.btnLoading = false
-        this.announcements = res.data.data.results
-        this.total = res.data.data.total
+        this.announcements = res.data.data.records
+        this.total = res.data.data.totalRow
       }, () => {
         this.btnLoading = false
       })

@@ -8,7 +8,7 @@ export default {
    * @param {string} key 键
    * @param {Object} value 值
    */
-  set (key, value) {
+  set(key, value) {
     localStorage.setItem(key, JSON.stringify(value))
   },
 
@@ -17,21 +17,25 @@ export default {
    * @param {string} key 键
    * @return {Object}
    */
-  get (key) {
-    return JSON.parse(localStorage.getItem(key)) || null
+  get(key) {
+    let item = localStorage.getItem(key);
+    if (item == 'undefined' || item == null)
+      return null;
+    return JSON.parse(item);
+
   },
 
   /**
    * remove key from localStorage
    * @param {string} key 键
    */
-  remove (key) {
+  remove(key) {
     localStorage.removeItem(key)
   },
   /**
    * clear all
    */
-  clear () {
+  clear() {
     localStorage.clear()
   }
 }

@@ -24,7 +24,7 @@ export default {
     return ajax('user/logout', 'get')
   },
   getProfile() {
-    return ajax('profile/getInfo', 'get')
+    return ajax('profile', 'get')
   },
   // 获取公告列表
   getAnnouncementList(offset, limit) {
@@ -100,7 +100,7 @@ export default {
     })
   },
   getLanguages() {
-    return ajax('languages', 'get')
+    return ajax('/config/languages', 'get')
   },
   getSMTPConfig() {
     return ajax('admin/smtp', 'get')
@@ -241,10 +241,7 @@ export default {
   },
   getProblemList(params) {
     params = utils.filterEmptyValue(params)
-    // return ajax('admin/problem', 'get', {
-    //   params
-    // })
-    return ajax('problem/page', 'get', {
+    return ajax('problem/list', 'get', {
       params
     })
   },

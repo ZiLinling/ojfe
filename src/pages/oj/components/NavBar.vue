@@ -3,7 +3,7 @@
     <Menu theme="light" mode="horizontal" @on-select="handleRoute" :active-name="activeMenu" class="oj-menu">
       <div class="logo"><span>{{ website.website_name_shortcut }}</span></div>
       <Menu-item name="/">
-        <Icon type="home"></Icon>
+        <Icon type="md-home"></Icon>
         {{ $t('m.Home') }}
       </Menu-item>
       <Menu-item name="/problem">
@@ -11,16 +11,16 @@
         {{ $t('m.NavProblems') }}
       </Menu-item>
       <Menu-item name="/contest">
-        <Icon type="trophy"></Icon>
+        <Icon type="md-trophy"></Icon>
         {{ $t('m.Contests') }}
       </Menu-item>
       <Menu-item name="/status">
-        <Icon type="ios-pulse-strong"></Icon>
+        <Icon type="ios-pulse"></Icon>
         {{ $t('m.NavStatus') }}
       </Menu-item>
       <Submenu name="rank">
         <template slot="title">
-          <Icon type="podium"></Icon>
+          <Icon type="md-podium"></Icon>
           {{ $t('m.Rank') }}
         </template>
         <Menu-item name="/acm-rank">
@@ -32,7 +32,7 @@
       </Submenu>
       <Submenu name="about">
         <template slot="title">
-          <Icon type="information-circled"></Icon>
+          <Icon type="md-information-circle"></Icon>
           {{ $t('m.About') }}
         </template>
         <Menu-item name="/about">
@@ -54,7 +54,7 @@
       <template v-else>
         <Dropdown class="drop-menu" @on-click="handleRoute" placement="bottom" trigger="click">
           <Button type="text" class="drop-menu-title">{{ user.username }}
-            <Icon type="arrow-down-b"></Icon>
+            <Icon type="md-arrow-dropdown"></Icon>
           </Button>
           <Dropdown-menu slot="list">
             <Dropdown-item name="/user-home">{{ $t('m.MyHome') }}</Dropdown-item>
