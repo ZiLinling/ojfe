@@ -7,20 +7,10 @@
             <div class="avatar-editor">
               <div class="avatar-container">
                 <img class="avatar" :src="profile.avatar"/>
-                <div class="avatar-mask">
-                  <a @click.stop="goRoute({name: 'profile-setting'})">
-                    <div class="mask-content">
-                      <Icon type="camera" size="30"></Icon>
-                      <p class="text">change avatar</p>
-                    </div>
-                  </a>
-                </div>
               </div>
             </div>
-
             <Menu-item name="/setting/profile">{{$t('m.Profile')}}</Menu-item>
             <Menu-item name="/setting/account">{{$t('m.Account')}}</Menu-item>
-            <Menu-item name="/setting/security">{{$t('m.Security')}}</Menu-item>
           </Menu>
         </div>
         <div class="panel">
@@ -68,11 +58,6 @@
         padding: 10% 22%;
         margin-bottom: 10px;
         .avatar-container {
-          &:hover {
-            .avatar-mask {
-              opacity: .5;
-            }
-          }
           position: relative;
           .avatar {
             width: 100%;
@@ -81,31 +66,6 @@
             display: block;
             border-radius: @avatar-radius;
             box-shadow: 0px 0px 1px 0px;
-          }
-          .avatar-mask {
-            transition: opacity .2s ease-in;
-            z-index: 1;
-            border-radius: @avatar-radius;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: black;
-            opacity: 0;
-            .mask-content {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              z-index: 3;
-              color: #fff;
-              font-size: 16px;
-              text-align: center;
-              transform: translate(-50%, -50%);
-              .text {
-                white-space: nowrap;
-              }
-            }
           }
         }
       }

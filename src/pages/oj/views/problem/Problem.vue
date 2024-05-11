@@ -136,7 +136,7 @@
         <ul>
           <li>
             <p>ID</p>
-            <p>{{ problem._id }}</p>
+            <p>{{ problem.displayId }}</p>
           </li>
           <li>
             <p>{{ $t('m.Time_Limit') }}</p>
@@ -240,7 +240,7 @@ export default {
         title: '',
         description: '',
         hint: '',
-        my_status: '',
+        myStatus: '',
         template: {},
         languages: [],
         created_user: '',
@@ -283,12 +283,12 @@ export default {
         this.$Loading.finish()
         let problem = res.data.data
         this.changeDomTitle({ title: problem.title })
-        // api.submissionExists(problem.id).then(res => {
-        //   this.submissionExists = res.data.data
-        // })
+        api.submissionExists(problem.id).then(res => {
+          this.submissionExists = res.data.data
+        })
         problem.languages = problem.languages.sort()
         this.problem = problem
-        if (problem.statistic_info) {
+        if (problem.statisticInfo) {
           this.changePie(problem)
         }
 
@@ -308,9 +308,9 @@ export default {
     },
     changePie(problemData) {
       // 只显示特定的一些状态
-      for (let k in problemData.statistic_info) {
+      for (let k in problemData.statisticInfo) {
         if (filtedStatus.indexOf(k) === -1) {
-          delete problemData.statistic_info[k]
+          delete problemData.statisticInfo[k]
         }
       }
       let acNum = problemData.accepted_number
@@ -325,19 +325,19 @@ export default {
       this.largePie.series[1].data = data2
 
       // 根据结果设置legend,没有提交过的legend不显示
-      let legend = Object.keys(problemData.statistic_info).map(ele => JUDGE_STATUS[ele].short)
+      let legend = Object.keys(problemData.statisticInfo).map(ele => JUDGE_STATUS[ele].short)
       if (legend.length === 0) {
         legend.push('AC', 'WA')
       }
       this.largePie.legend.data = legend
 
       // 把ac的数据提取出来放在最后
-      let acCount = problemData.statistic_info['0']
-      delete problemData.statistic_info['0']
+      let acCount = problemData.statisticInfo['0']
+      delete problemData.statisticInfo['0']
 
       let largePieData = []
-      Object.keys(problemData.statistic_info).forEach(ele => {
-        largePieData.push({ name: JUDGE_STATUS[ele].short, value: problemData.statistic_info[ele] })
+      Object.keys(problemData.statisticInfo).forEach(ele => {
+        largePieData.push({ name: JUDGE_STATUS[ele].short, value: problemData.statisticInfo[ele] })
       })
       largePieData.push({ name: 'AC', value: acCount })
       this.largePie.series[0].data = largePieData
@@ -379,7 +379,7 @@ export default {
         let id = this.submissionId
         api.getSubmission(id).then(res => {
           this.result = res.data.data
-          if (Object.keys(res.data.data.statistic_info).length !== 0) {
+          if (Object.keys(res.data.data.statisticInfo).length !== 0) {
             this.submitting = false
             this.submitted = false
             clearTimeout(this.refreshStatus)
@@ -478,7 +478,7 @@ export default {
     submissionStatus() {
       return {
         text: JUDGE_STATUS[this.result.result]['name'],
-        color: JUDGE_STATUS[this.result.result]['color']
+        color: JUDGE_STATUS[this.result.result]['type']
       }
     },
     submissionRoute() {

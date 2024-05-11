@@ -7,37 +7,37 @@
       </div>
       <el-table v-loading="loading" element-loading-text="loading" ref="table" :data="problemList"
         @row-dblclick="handleDblclick" style="width: 100%">
-        <el-table-column width="100" prop="id" label="ID">
+        <el-table-column width="100" prop="id" label="ID" align="center">
         </el-table-column>
-        <el-table-column width="150" label="Display ID">
+        <el-table-column width="150" label="Display ID" align="center">
           <template slot-scope="{row}">
-            <span v-show="!row.isEditing">{{ row._id }}</span>
-            <el-input v-show="row.isEditing" v-model="row._id" @keyup.enter.native="handleInlineEdit(row)">
+            <span v-show="!row.isEditing">{{ row.displayId }}</span>
+            <el-input v-show="row.isEditing" v-model="row.displayId" @keyup.enter.native="handleInlineEdit(row)">
 
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="Title">
+        <el-table-column prop="title" label="Title" align="center">
           <template slot-scope="{row}">
             <span v-show="!row.isEditing">{{ row.title }}</span>
             <el-input v-show="row.isEditing" v-model="row.title" @keyup.enter.native="handleInlineEdit(row)">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="created_by.username" label="Author">
+        <el-table-column prop="creator" label="Author" align="center">
         </el-table-column>
-        <el-table-column width="200" prop="create_time" label="Create Time">
+        <el-table-column width="200" prop="create_time" label="Create Time" align="center">
           <template slot-scope="scope">
-            {{ scope.row.create_time | localtime }}
+            {{ scope.row.createTime }}
           </template>
         </el-table-column>
-        <el-table-column width="100" prop="visible" label="Visible">
+        <el-table-column width="100" prop="visible" label="Visible" align="center">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.visible" active-text="" inactive-text="" @change="updateProblem(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="Operation" width="250">
+        <el-table-column fixed="right" label="Operation" width="250" align="center">
           <div slot-scope="scope">
             <icon-btn name="Edit" icon="edit" @click.native="goEdit(scope.row.id)"></icon-btn>
             <icon-btn v-if="contestId" name="Make Public" icon="clone"
@@ -61,7 +61,7 @@
     <el-dialog title="Sure to update the problem? " width="20%" :visible.sync="InlineEditDialogVisible"
       @close-on-click-modal="false">
       <div>
-        <p>DisplayID: {{ currentRow._id }}</p>
+        <p>DisplayID: {{ currentRow.diaplsyId }}</p>
         <p>Title: {{ currentRow.title }}</p>
       </div>
       <span slot="footer">
@@ -137,7 +137,6 @@ export default {
       let funcName = this.routeName === 'problem-list' ? 'getProblemList' : 'getContestProblemList'
       let params = {
         limit: this.pageSize,
-        offset: (page - 1) * this.pageSize,
         page: page,
         keyword: this.keyword,
         contest_id: this.contestId
@@ -167,7 +166,7 @@ export default {
     },
     makeContestProblemPublic(problemID) {
       this.$prompt('Please input display id for the public problem', 'confirm').then(({ value }) => {
-        api.makeContestProblemPublic({ id: problemID, display_id: value }).catch()
+        api.makeContestProblemPublic({ id: problemID, displayId: value }).catch()
       }, () => {
       })
     },

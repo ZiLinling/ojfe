@@ -7,7 +7,8 @@
       <div v-if="profile.user">
         <p style="margin-top: -10px">
           <span v-if="profile.user" class="emphasis">{{profile.user.username}}</span>
-          <span v-if="profile.school">@{{profile.school}}</span>
+          <span v-if="profile.major"> · {{profile.major}}</span>
+          <span v-if="profile.studentId"> · {{profile.studentId}}</span>
         </p>
         <p v-if="profile.mood">
           {{profile.mood}}
@@ -62,12 +63,13 @@
 </template>
 <script>
   import { mapActions,mapGetters } from 'vuex'
-  import time from '@/utils/time'
   import api from '@oj/api'
 
   export default {
     data () {
       return {
+        username: '',
+        profile: {},
         problems: []
       }
     },
@@ -77,14 +79,17 @@
     methods: {
       ...mapActions(['changeDomTitle']),
       init () {
-        this.changeDomTitle({title: this.profile.user.username})
-        this.getSolvedProblems()
-        let registerTime = time.utcToLocal(this.profile.user.create_time, 'YYYY-MM-D')
-          console.log('The guy registered at ' + registerTime + '.')
+        this.username = this.$route.query.username
+        api.getUserInfo(this.username).then(res => {
+          this.changeDomTitle({title: res.data.data.user.username})
+          this.profile = res.data.data
+          this.getSolvedProblems()
+          console.log('The guy registered at ' + this.profile.user.createTime + '.')
+        })
       },
       getSolvedProblems () {
-        let ACMProblems = this.profile.acm_problems_status.problems || {}
-        let OIProblems = this.profile.oi_problems_status.problems || {}
+        let ACMProblems = this.profile.acmProblemsStatus.problems || {}
+        let OIProblems = this.profile.oiProblemsStatus.problems || {}
         // todo oi problems
         let ACProblems = []
         for (let problems of [ACMProblems, OIProblems]) {
@@ -108,10 +113,10 @@
       }
     },
     computed: {
-      ...mapGetters(['profile']),
+      ...mapGetters(['user']),
       refreshVisible () {
         if (!this.username) return true
-        if (this.username && this.username === this.$store.getters.user.username) return true
+        if (this.username && this.username === this.user.username) return true
         return false
       }
     },

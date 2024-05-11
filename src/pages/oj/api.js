@@ -3,7 +3,7 @@ import store from '@/store'
 import axios from 'axios'
 
 Vue.prototype.$http = axios
-axios.defaults.baseURL = 'http://localhost:8090/OnlineJudge'
+axios.defaults.baseURL = '/api'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
 
@@ -49,11 +49,15 @@ export default {
       }
     })
   },
-  getUserInfo() {
-    return ajax('profile', 'get')
+  getUserInfo(username = undefined) {
+    return ajax('profile', 'get', {
+      params: {
+        username
+      }
+    })
   },
   updateProfile(profile) {
-    return ajax('profile', 'put', {
+    return ajax('profile/update', 'put', {
       data: profile
     })
   },
@@ -192,10 +196,10 @@ export default {
       data
     })
   },
-  getSubmissionList(offset, limit, params) {
+  getSubmissionList(page, limit, params) {
     params.limit = limit
-    params.offset = offset
-    return ajax('submissions', 'get', {
+    params.page = page
+    return ajax('submission/list', 'get', {
       params
     })
   },
@@ -214,9 +218,9 @@ export default {
     })
   },
   submissionExists(problemID) {
-    return ajax('submission_exists', 'get', {
+    return ajax('submission/exist', 'get', {
       params: {
-        problem_id: problemID
+        problemId: problemID
       }
     })
   },

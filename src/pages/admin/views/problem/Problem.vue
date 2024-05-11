@@ -5,9 +5,9 @@
       <el-form ref="form" :model="problem" :rules="rules" label-position="top" label-width="70px">
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item prop="_id" :label="$t('m.Display_ID')"
+            <el-form-item prop="displayId" :label="$t('m.Display_ID')"
               :required="this.routeName === 'create-contest-problem' || this.routeName === 'edit-contest-problem'">
-              <el-input :placeholder="$t('m.Display_ID')" v-model="problem._id"></el-input>
+              <el-input :placeholder="$t('m.Display_ID')" v-model="problem.displayId"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="18">
@@ -26,24 +26,24 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item prop="input_description" :label="$t('m.Input_Description')" required>
-              <Simditor v-model="problem.input_description"></Simditor>
+              <Simditor v-model="problem.inputDescription"></Simditor>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item prop="output_description" :label="$t('m.Output_Description')" required>
-              <Simditor v-model="problem.output_description"></Simditor>
+              <Simditor v-model="problem.outputDescription"></Simditor>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item :label="$t('m.Time_Limit') + ' (ms)'" required>
-              <el-input type="Number" :placeholder="$t('m.Time_Limit')" v-model="problem.time_limit"></el-input>
+              <el-input type="Number" :placeholder="$t('m.Time_Limit')" v-model="problem.timeLimit"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('m.Memory_limit') + ' (MB)'" required>
-              <el-input type="Number" :placeholder="$t('m.Memory_limit')" v-model="problem.memory_limit"></el-input>
+              <el-input type="Number" :placeholder="$t('m.Memory_limit')" v-model="problem.memoryLimit"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -66,7 +66,7 @@
           </el-col>
           <el-col :span="4">
             <el-form-item :label="$t('m.ShareSubmission')">
-              <el-switch v-model="problem.share_submission" active-text="" inactive-text="">
+              <el-switch v-model="problem.shareSubmission" active-text="" inactive-text="">
               </el-switch>
             </el-form-item>
           </el-col>
@@ -159,13 +159,13 @@
                 {{ $t('m.Compile') }}
               </el-button>
             </template>
-            <code-mirror v-model="problem.spj_code" :mode="spjMode"></code-mirror>
+            <code-mirror v-model="problem.spjCode" :mode="spjMode"></code-mirror>
           </Accordion>
         </el-form-item>
         <el-row :gutter="20">
           <el-col :span="4">
             <el-form-item :label="$t('m.Type')">
-              <el-radio-group v-model="problem.rule_type" :disabled="disableRuleType">
+              <el-radio-group v-model="problem.ruleType" :disabled="disableRuleType">
                 <el-radio label="ACM">ACM</el-radio>
                 <el-radio label="OI">OI</el-radio>
               </el-radio-group>
@@ -182,26 +182,26 @@
 
           <el-col :span="6">
             <el-form-item :label="$t('m.IOMode')">
-              <el-radio-group v-model="problem.io_mode.io_mode">
+              <el-radio-group v-model="problem.ioMode.io_mode">
                 <el-radio label="Standard IO">Standard IO</el-radio>
                 <el-radio label="File IO">File IO</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
 
-          <el-col :span="4" v-if="problem.io_mode.io_mode == 'File IO'">
+          <el-col :span="4" v-if="problem.ioMode.io_mode == 'File IO'">
             <el-form-item :label="$t('m.InputFileName')" required>
-              <el-input type="text" v-model="problem.io_mode.input"></el-input>
+              <el-input type="text" v-model="problem.ioMode.input"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4" v-if="problem.io_mode.io_mode == 'File IO'">
+          <el-col :span="4" v-if="problem.ioMode.io_mode == 'File IO'">
             <el-form-item :label="$t('m.OutputFileName')" required>
-              <el-input type="text" v-model="problem.io_mode.output"></el-input>
+              <el-input type="text" v-model="problem.ioMode.output"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="24">
-            <el-table :data="problem.test_case_score" style="width: 100%">
+            <el-table :data="problem.testCaseScore" style="width: 100%">
               <el-table-column prop="input_name" :label="$t('m.Input')">
               </el-table-column>
               <el-table-column prop="output_name" :label="$t('m.Output')">
@@ -209,7 +209,7 @@
               <el-table-column prop="score" :label="$t('m.Score')">
                 <template slot-scope="scope">
                   <el-input size="small" :placeholder="$t('m.Score')" v-model="scope.row.score"
-                    :disabled="problem.rule_type !== 'OI'">
+                    :disabled="problem.ruleType !== 'OI'">
                   </el-input>
                 </template>
               </el-table-column>
@@ -242,21 +242,21 @@ export default {
   data() {
     return {
       rules: {
-        _id: { required: true, message: 'Display ID is required', trigger: 'blur' },
+        displayId: { required: true, message: 'Display ID is required', trigger: 'blur' },
         title: { required: true, message: 'Title is required', trigger: 'blur' },
-        input_description: { required: true, message: 'Input Description is required', trigger: 'blur' },
-        output_description: { required: true, message: 'Output Description is required', trigger: 'blur' }
+        inputDescription: { required: true, message: 'Input Description is required', trigger: 'blur' },
+        outputDescription: { required: true, message: 'Output Description is required', trigger: 'blur' }
       },
       loadingCompile: false,
       mode: '',
       contest: {},
       problem: {
         languages: [],
-        io_mode: { 'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt' }
+        ioMode: { 'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt' }
       },
       reProblem: {
         languages: [],
-        io_mode: { 'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt' }
+        ioMode: { 'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt' }
       },
       testCaseUploaded: false,
       allLanguage: {},
@@ -283,45 +283,43 @@ export default {
       this.mode = 'add'
     }
     api.getLanguages().then(res => {
-      console.log(11111)
-      console.log(res.data)
       this.problem = this.reProblem = {
-        _id: '',
+        displayId: '',
         title: '',
         description: '',
-        input_description: '',
-        output_description: '',
-        time_limit: 1000,
-        memory_limit: 256,
+        inputDescription: '',
+        outputDescription: '',
+        timeLimit: 1000,
+        memoryLimit: 256,
         difficulty: 'Low',
         visible: true,
-        share_submission: false,
+        shareSubmission: false,
         tags: [],
         languages: [],
         template: {},
         samples: [{ input: '', output: '' }],
         spj: false,
-        spj_language: '',
-        spj_code: '',
-        spj_compile_ok: false,
-        test_case_id: '',
-        test_case_score: [],
-        rule_type: 'ACM',
+        spjLanguage: '',
+        spjCode: '',
+        spjCompileOk: false,
+        testCaseId: '',
+        testCaseScore: [],
+        ruleType: 'ACM',
         hint: '',
         source: '',
-        io_mode: { 'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt' }
+        ioMode: { 'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt' }
       }
       let contestID = this.$route.params.contestId
       if (contestID) {
-        this.problem.contest_id = this.reProblem.contest_id = contestID
+        this.problem.contest_id = this.reProblem.contestId = contestID
         this.disableRuleType = true
         api.getContest(contestID).then(res => {
-          this.problem.rule_type = this.reProblem.rule_type = res.data.data.rule_type
+          this.problem.ruleType = this.reProblem.ruleType = res.data.data.ruleType
           this.contest = res.data.data
         })
       }
 
-      this.problem.spj_language = 'C'
+      this.problem.spjLanguage = 'C'
 
       let allLanguage = res.data.data
       this.allLanguage = allLanguage
@@ -332,10 +330,10 @@ export default {
         let funcName = { 'edit-problem': 'getProblem', 'edit-contest-problem': 'getContestProblem' }[this.routeName]
         api[funcName](this.$route.params.problemId).then(problemRes => {
           let data = problemRes.data.data
-          if (!data.spj_code) {
-            data.spj_code = ''
+          if (!data.spjCode) {
+            data.spjCode = ''
           }
-          data.spj_language = data.spj_language || 'C'
+          data.spjLanguage = data.spjLanguage || 'C'
           this.problem = data
           this.testCaseUploaded = true
         })
@@ -374,7 +372,7 @@ export default {
     },
     'problem.spj_language'(newVal) {
       this.spjMode = this.allLanguage.spj_languages.find(item => {
-        return item.name === this.problem.spj_language
+        return item.name === this.problem.spjLanguage
       }).content_type
     }
   },
@@ -406,8 +404,8 @@ export default {
     },
     resetTestCase() {
       this.testCaseUploaded = false
-      this.problem.test_case_score = []
-      this.problem.test_case_id = ''
+      this.problem.testCaseScore = []
+      this.problem.testCaseId = ''
     },
     addTag() {
       let inputValue = this.tagInput
@@ -438,9 +436,9 @@ export default {
           file.output_name = '-'
         }
       }
-      this.problem.test_case_score = fileList
+      this.problem.testCaseScore = fileList
       this.testCaseUploaded = true
-      this.problem.test_case_id = response.data.id
+      this.problem.testCaseId = response.data.id
     },
     uploadFailed() {
       this.$error('Upload failed')
@@ -448,17 +446,17 @@ export default {
     compileSPJ() {
       let data = {
         id: this.problem.id,
-        spj_code: this.problem.spj_code,
-        spj_language: this.problem.spj_language
+        spjCode: this.problem.spjCode,
+        spjLanguage: this.problem.spjLanguage
       }
       this.loadingCompile = true
       api.compileSPJ(data).then(res => {
         this.loadingCompile = false
-        this.problem.spj_compile_ok = true
+        this.problem.spjCompileOk = true
         this.error.spj = ''
       }, err => {
         this.loadingCompile = false
-        this.problem.spj_compile_ok = false
+        this.problem.spjCompileOk = false
         const h = this.$createElement
         this.$msgbox({
           title: 'Compile Error',
@@ -487,10 +485,10 @@ export default {
         return
       }
       if (this.problem.spj) {
-        if (!this.problem.spj_code) {
+        if (!this.problem.spjCode) {
           this.error.spj = 'Spj code is required'
           this.$error(this.error.spj)
-        } else if (!this.problem.spj_compile_ok) {
+        } else if (!this.problem.spjCompileOk) {
           this.error.spj = 'SPJ code has not been successfully compiled'
         }
         if (this.error.spj) {
@@ -508,8 +506,8 @@ export default {
         this.$error(this.error.testCase)
         return
       }
-      if (this.problem.rule_type === 'OI') {
-        for (let item of this.problem.test_case_score) {
+      if (this.problem.ruleType === 'OI') {
+        for (let item of this.problem.testCaseScore) {
           try {
             if (parseInt(item.score) <= 0) {
               this.$error('Invalid test case score')
@@ -536,7 +534,7 @@ export default {
       }[this.routeName]
       // edit contest problem 时, contest_id会被后来的请求覆盖掉
       if (funcName === 'editContestProblem') {
-        this.problem.contest_id = this.contest.id
+        this.problem.contestId = this.contest.id
       }
       api[funcName](this.problem).then(res => {
         if (this.routeName === 'create-contest-problem' || this.routeName === 'edit-contest-problem') {

@@ -5,6 +5,19 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
+const TARGET = "http://localhost:8090/OnlineJudge"
+const commonProxy = {
+  onProxyReq: (proxyReq, req, res) => {
+    proxyReq.setHeader('Referer', TARGET)
+  },
+  target: TARGET,
+  changeOrigin: true,
+  pathRewrite: {
+    "^/public": "/public",
+    "^/api": ""
+  }
+}
+
 module.exports = defineConfig({
   pages: {
     oj: {
@@ -24,6 +37,10 @@ module.exports = defineConfig({
   devServer: {
     client: {
       overlay: false
+    },
+    proxy: {
+      "/api": commonProxy,
+      "/public": commonProxy
     }
   },
   configureWebpack: {
@@ -31,10 +48,12 @@ module.exports = defineConfig({
       extensions: ['.js', '.vue', '.json'],
       alias: {
         '@': resolve('src'),
+        '@resource': resolve('static'),
         '@oj': resolve('src/pages/oj'),
         '@admin': resolve('src/pages/admin'),
         '~': resolve('src/components')
       }
     }
   },
+
 })

@@ -15,14 +15,15 @@ const getters = {
     return !!getters.user.id
   },
   isAdminRole: (state, getters) => {
-    return getters.user.admin_type === USER_TYPE.ADMIN ||
-      getters.user.admin_type === USER_TYPE.SUPER_ADMIN
+    console.log(getters.user.adminType)
+    return getters.user.adminType === USER_TYPE.ADMIN ||
+      getters.user.adminType === USER_TYPE.SUPER_ADMIN
   },
   isSuperAdmin: (state, getters) => {
-    return getters.user.admin_type === USER_TYPE.SUPER_ADMIN
+    return getters.user.adminType === USER_TYPE.SUPER_ADMIN
   },
   hasProblemPermission: (state, getters) => {
-    return getters.user.problem_permission !== PROBLEM_PERMISSION.NONE
+    return getters.user.problemPermission !== PROBLEM_PERMISSION.NONE
   }
 }
 

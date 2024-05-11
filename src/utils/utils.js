@@ -67,9 +67,18 @@ function downloadFile(url) {
         fr.readAsText(b)
         return
       }
+      let fileName = ''
+      const contentDisposition = headers['content-disposition']
+      if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
+        const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+        const matches = fileNameRegex.exec(contentDisposition)
+        if (matches != null && matches[1]) {
+          fileName = matches[1].replace(/['"]/g, '')
+        }
+      }
       let link = document.createElement('a')
       link.href = window.URL.createObjectURL(new window.Blob([resp.data], { type: headers['content-type'] }))
-      link.download = (headers['content-disposition'] || '').split('filename=')[1]
+      link.download = fileName || 'file'
       document.body.appendChild(link)
       link.click()
       link.remove()

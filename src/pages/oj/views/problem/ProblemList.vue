@@ -30,14 +30,14 @@
           </li>
           <li>
             <Button type="info" @click="onReset">
-              <Icon type="refresh"></Icon>
+              <Icon type="md-refresh"></Icon>
               {{ $t('m.Reset') }}
             </Button>
           </li>
         </ul>
       </div>
       <Table style="width: 100%; font-size: 16px;" :columns="problemTableColumns" :data="problemList"
-        :loading="loadings.table" disabled-hover ></Table>
+        :loading="loadings.table" disabled-hover></Table>
     </Panel>
     <Pagination :total="total" :page-size.sync="query.limit" @on-change="pushRouter" @on-page-size-change="pushRouter"
       :current.sync="query.page" :show-sizer="true"></Pagination>
@@ -80,7 +80,7 @@ export default {
       problemTableColumns: [
         {
           title: '#',
-          key: '_id',
+          key: 'displayId',
           width: 80,
           render: (h, params) => {
             return h('Button', {
@@ -90,13 +90,13 @@ export default {
               },
               on: {
                 click: () => {
-                  this.$router.push({ name: 'problem-details', params: { problemID: params.row._id } })
+                  this.$router.push({ name: 'problem-details', params: { problemID: params.row.displayId } })
                 }
               },
               style: {
                 padding: '2px 0'
               }
-            }, params.row._id)
+            }, params.row.displayId)
           }
         },
         {
@@ -112,7 +112,7 @@ export default {
                 click: () => {
                   let routeUrl = this.$router.resolve({
                     name: 'problem-details',
-                    params: { problemID: params.row._id }
+                    params: { problemID: params.row.displayId }
                   });
                   window.open(routeUrl.href, '_blank');
                 }
@@ -142,12 +142,12 @@ export default {
         },
         {
           title: this.$i18n.t('m.Total'),
-          key: 'submission_number'
+          key: 'submissionNumber'
         },
         {
           title: this.$i18n.t('m.AC_Rate'),
           render: (h, params) => {
-            return h('span', this.getACRate(params.row.accepted_number, params.row.submission_number))
+            return h('span', this.getACRate(params.row.acceptedNumber, params.row.submissionNumber))
           }
         }
       ],
@@ -236,9 +236,8 @@ export default {
             title: this.$i18n.t('m.Tags'),
             align: 'center',
             render: (h, params) => {
-              let tagList = params.row.tags.split(",")
               let tags = []
-              tagList.forEach(tag => {
+              params.row.tags.forEach(tag => {
                 tags.push(h('Tag', {}, tag))
               })
               return h('div', {

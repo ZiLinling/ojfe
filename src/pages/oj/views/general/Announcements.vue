@@ -5,7 +5,7 @@
     </div>
     <div slot="extra">
       <Button v-if="listVisible" type="info" @click="init" :loading="btnLoading">{{ $t('m.Refresh') }}</Button>
-      <Button v-else type="ghost" icon="ios-undo" @click="goBack">{{ $t('m.Back') }}</Button>
+      <Button v-else type="default" icon="ios-undo" @click="goBack">{{ $t('m.Back') }}</Button>
     </div>
 
     <transition-group name="announcement-animate" mode="in-out">
@@ -18,8 +18,8 @@
             <div class="flex-container">
               <div class="title"><a class="entry" @click="goAnnouncement(announcement)">
                   {{ announcement.title }}</a></div>
-              <div class="date">{{ announcement.create_time | localtime }}</div>
-              <div class="creator"> {{ $t('m.By') }} {{ announcement.created_by.username }}</div>
+              <div class="date">{{ announcement.createTime}}</div>
+              <div class="creator"> {{ $t('m.By') }} {{ announcement.creator }}</div>
             </div>
           </li>
         </ul>
@@ -58,7 +58,7 @@ export default {
     }
   },
   mounted() {
-    // this.init()
+    this.init()
   },
   methods: {
     init () {

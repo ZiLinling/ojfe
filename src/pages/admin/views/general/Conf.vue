@@ -71,15 +71,6 @@
                 </el-switch>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item :label="$t('m.Submission_List_Show_All')" label-width="200px">
-                <el-switch
-                  v-model="websiteConfig.submission_list_show_all"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949">
-                </el-switch>
-              </el-form-item>
-            </el-col>
           </el-col>
         </el-row>
       </el-form>

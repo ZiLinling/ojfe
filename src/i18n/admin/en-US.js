@@ -13,6 +13,7 @@ export const m = {
   ShareSubmission: 'Share Submission',
   Problem_List: 'Problem List',
   Create_Problem: 'Create Problem',
+  Create_Announcement: 'Create Announcement',
   Export_Import_Problem: 'Export Or Import Problem',
   Contest: 'Contest',
   Contest_List: 'Contest List',
@@ -90,6 +91,7 @@ export const m = {
   Hint: 'Hint',
   Source: 'Source',
   Edit_Problem: 'Edit Problme',
+  Edit_Announcement: 'Edit Announcement',
   Add_Problme: 'Add Problem',
   High: 'High',
   Mid: 'Mid',
@@ -111,6 +113,7 @@ export const m = {
   CIDR_Network: 'CIDR Network',
   // Dashboard.vue
   Last_Login: 'Last Login',
+  Last_Status: 'Last Status',
   System_Overview: 'System Overview',
   DashBoardJudge_Server: 'Judge Server',
   HTTPS_Status: 'HTTPS Status',
@@ -120,5 +123,6 @@ export const m = {
   Welcome_to_Login: 'Welcome to Login',
   GO: 'GO',
   username: 'username',
-  password: 'password'
+  password: 'password',
+  Logout: 'logout',
 }

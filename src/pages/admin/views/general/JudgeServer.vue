@@ -10,15 +10,17 @@
         border>
         <el-table-column
           type="expand">
-          <template slot-scope="props">
-            <p>{{$t('m.IP')}}:
+          <template slot-scope="props" >
+            <div class="info">
+              <p>{{$t('m.IP')}}:
               <el-tag type="success">{{ props.row.ip }}</el-tag>&nbsp;&nbsp;
               {{$t('m.Judger_Version')}}:
-              <el-tag type="success">{{ props.row.judger_version }}</el-tag>
+              <el-tag type="success">{{ props.row.judgerVersion }}</el-tag>
             </p>
-            <p>{{$t('m.Service_URL')}}: <code>{{ props.row.service_url }}</code></p>
-            <p>{{$t('m.Last_Heartbeat')}}: {{ props.row.last_heartbeat | localtime}}</p>
-            <p>{{$t('m.Create_Time')}}: {{ props.row.create_time | localtime }}</p>
+            <p>{{$t('m.Service_URL')}}: <code>{{ props.row.serviceUrl }}</code></p>
+            <p>{{$t('m.Last_Heartbeat')}}: {{ props.row.lastHeartbeat}}</p>
+            <p>{{$t('m.Create_Time')}}: {{ props.row.createTime}}</p>
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -36,33 +38,33 @@
           label="Hostname">
         </el-table-column>
         <el-table-column
-          prop="task_number"
+          prop="taskNumber"
           label="Task Number">
         </el-table-column>
         <el-table-column
-          prop="cpu_core"
+          prop="cpuCore"
           label="CPU Core">
         </el-table-column>
         <el-table-column
-          prop="cpu_usage"
+          prop="cpuUsage"
           label="CPU Usage">
-          <template slot-scope="scope">{{ scope.row.cpu_usage }}%</template>
+          <template slot-scope="scope">{{ scope.row.cpuUsage }}%</template>
         </el-table-column>
         <el-table-column
-          prop="memory_usage"
+          prop="memoryUsage"
           label="Memory Usage">
-          <template slot-scope="scope">{{ scope.row.memory_usage }}%</template>
+          <template slot-scope="scope">{{ scope.row.memoryUsage }}%</template>
         </el-table-column>
         <el-table-column label="Disabled">
           <template slot-scope="{row}">
-            <el-switch v-model="row.is_disabled" @change="handleDisabledSwitch(row.id, row.is_disabled)"></el-switch>
+            <el-switch v-model="row.isDisabled" @change="handleDisabledSwitch(row.id, row.isDisabled)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column
           fixed="right"
           label="Options">
           <template slot-scope="scope">
-            <icon-btn name="Delete" icon="trash" @click.native="deleteJudgeServer(scope.row.hostname)"></icon-btn>
+            <icon-btn name="Delete" icon="trash" @click.native="deleteJudgeServer(scope.row.hostname,scope.row.ip)"></icon-btn>
           </template>
         </el-table-column>
       </el-table>
@@ -91,17 +93,17 @@
     methods: {
       refreshJudgeServerList () {
         api.getJudgeServer().then(res => {
-          this.servers = res.data.data.servers
+          this.servers = res.data.data
           this.token = res.data.data.token
         })
       },
-      deleteJudgeServer (hostname) {
+      deleteJudgeServer (hostname,ip) {
         this.$confirm('If you delete this judge server, it can\'t be used until next heartbeat', 'Warning', {
           confirmButtonText: 'Delete',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          api.deleteJudgeServer(hostname).then(res =>
+          api.deleteJudgeServer(hostname,ip).then(res =>
             this.refreshJudgeServerList()
           )
         }).catch(() => {
@@ -110,7 +112,7 @@
       handleDisabledSwitch (id, value) {
         let data = {
           id,
-          is_disabled: value
+          isDisabled: value
         }
         api.updateJudgeServer(data).catch(() => {})
       }
@@ -121,3 +123,11 @@
     }
   }
 </script>
+
+<style>
+
+.el-table__expanded-cell[class*=cell] {
+    padding: 20px 50px;
+}
+
+</style>

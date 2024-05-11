@@ -9,11 +9,10 @@
               :before-upload="handleSelectFile">
         <div style="padding: 30px 0">
           <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-          <p>Drop here, or click to select manually</p>
+          <p>拖放到这里，或者点击手动选择</p>
         </div>
       </Upload>
     </template>
-
     <template v-else>
       <div class="flex-container">
         <div class="cropper-main inline">
@@ -32,16 +31,16 @@
         </div>
         <ButtonGroup vertical class="cropper-btn">
           <Button @click="rotate('left')">
-            <Icon type="arrow-return-left" size="20"></Icon>
+            <Icon type="md-return-left" size="20"></Icon>
           </Button>
           <Button @click="rotate('right')">
-            <Icon type="arrow-return-right" size="20"></Icon>
+            <Icon type="md-return-right" size="20"></Icon>
           </Button>
           <Button @click="reselect">
-            <Icon type="refresh" size="20"></Icon>
+            <Icon type="md-exit" size="20"></Icon>
           </Button>
           <Button @click="finishCrop">
-            <Icon type="checkmark-round" size="20"></Icon>
+            <Icon type="md-checkmark" size="20"></Icon>
           </Button>
         </ButtonGroup>
         <div class="cropper-preview" :style="previewStyle">
@@ -66,16 +65,16 @@
     <Form ref="formProfile" :model="formProfile">
       <Row type="flex" :gutter="30" justify="space-around">
         <Col :span="11">
-          <FormItem label="Real Name">
-            <Input v-model="formProfile.real_name"/>
+          <FormItem :label="$t('m.RealName')">
+            <Input v-model="formProfile.realName"/>
           </FormItem>
-          <Form-item label="School">
+          <Form-item :label="$t('m.School')">
             <Input v-model="formProfile.school"/>
           </Form-item>
-          <Form-item label="Major">
+          <Form-item :label="$t('m.Major')">
             <Input v-model="formProfile.major"/>
           </Form-item>
-          <FormItem label="Language">
+          <FormItem :label="$t('m.Language')">
             <Select v-model="formProfile.language">
               <Option v-for="lang in languages" :key="lang.value" :value="lang.value">{{lang.label}}</Option>
             </Select>
@@ -86,10 +85,13 @@
         </Col>
 
         <Col :span="11">
-          <Form-item label="Mood">
+          <Form-item :label="$t('m.Mood')">
             <Input v-model="formProfile.mood"/>
           </Form-item>
-          <Form-item label="Blog">
+          <Form-item :label="$t('m.StudentId')">
+            <Input v-model="formProfile.studentId"/>
+          </Form-item>
+          <Form-item :label="$t('m.Blog')">
             <Input v-model="formProfile.blog"/>
           </Form-item>
           <Form-item label="Github">
@@ -126,13 +128,15 @@
         },
         languages: languages,
         formProfile: {
-          real_name: '',
+          id:'',
+          realName: '',
           mood: '',
           major: '',
           blog: '',
           school: '',
           github: '',
-          language: ''
+          language: '',
+          studentId:''
         }
       }
     },
@@ -210,7 +214,7 @@
           this.loadingUploadBtn = true
           this.$http({
             method: 'post',
-            url: 'upload_avatar',
+            url: 'profile/upload_avatar',
             data: form,
             headers: {'content-type': 'multipart/form-data'}
           }).then(res => {

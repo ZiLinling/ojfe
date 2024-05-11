@@ -13,6 +13,7 @@ export const m = {
   ShareSubmission: '分享提交',
   Problem_List: '試題列表',
   Create_Problem: '增加題目',
+  Create_Announcement: '發佈公告',
   Export_Import_Problem: '匯入匯出題目',
   Contest: '比賽',
   Contest_List: '比賽列表',
@@ -89,6 +90,8 @@ export const m = {
   Score: '分數',
   Hint: '提示',
   Source: '來源',
+  Edit_Problem: '編輯問題',
+  Edit_Announcement: '編輯公告',
   // Contest.vue
   ContestTitle: '標題',
   ContestDescription: '描述',
@@ -101,10 +104,12 @@ export const m = {
   Allowed_IP_Ranges: '允許的 IP 範圍',
   CIDR_Network: 'CIDR Network',
   // Dashboard.vue
-  Last_Login: '最後登入狀態',
+  Last_Login: '最後登入時間',
+  Last_Status: '最後登入狀態',
   System_Overview: '系統狀況',
   DashBoardJudge_Server: 'Judge 伺服器',
   HTTPS_Status: 'HTTPS 狀態',
   Force_HTTPS: '強制 HTTPS',
-  CDN_HOST: 'CDN HOST'
+  CDN_HOST: 'CDN HOST',
+  Logout: '登出',
 }

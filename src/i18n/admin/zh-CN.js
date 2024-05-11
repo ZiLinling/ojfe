@@ -13,6 +13,7 @@ export const m = {
   ShareSubmission: '分享提交',
   Problem_List: '问题列表',
   Create_Problem: '增加题目',
+  Create_Announcement: '发布公告',
   Export_Import_Problem: '导入导出题目',
   Contest: '比赛&练习',
   Contest_List: '比赛列表',
@@ -90,6 +91,7 @@ export const m = {
   Hint: '提示',
   Source: '来源',
   Edit_Problem: '编辑问题',
+  Edit_Announcement: '编辑公告',
   Add_Problem: '添加问题',
   High: '高',
   Mid: '中',
@@ -110,7 +112,8 @@ export const m = {
   Allowed_IP_Ranges: '允许的 IP 范围',
   CIDR_Network: 'CIDR 网络',
   // Dashboard.vue
-  Last_Login: '最后登录状态',
+  Last_Login: '最后登录时间',
+  Last_Status: '最后登录状态',
   System_Overview: '系统状况',
   DashBoardJudge_Server: '判题服务器',
   HTTPS_Status: 'HTTPS 状态',
@@ -120,5 +123,6 @@ export const m = {
   Welcome_to_Login: '欢迎登录 OnlineJudge 后台管理系统',
   GO: '登录',
   username: '用户名',
-  password: '密码'
+  password: '密码',
+  Logout: '退出'
 }

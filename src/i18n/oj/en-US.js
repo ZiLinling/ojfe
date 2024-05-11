@@ -49,6 +49,11 @@ export const m = {
   Chart: 'Chart',
   Auto_Refresh: 'Auto Refresh',
   RealName: 'RealName',
+  School:'School',
+  Major:'Major',
+  Mood:'Mood',
+  StudentId:'StudentId',
+  Blog:'Blog',
   Force_Update: 'Force Update',
   download_csv: 'download csv',
   TotalTime: 'TotalTime',
@@ -65,7 +70,6 @@ export const m = {
   Check_It: 'Check It',
   // ACMRank.vue
   ACM_Ranklist: 'ACM Ranklist',
-  mood: 'mood',
   AC: 'AC',
   Rating: 'Rating',
   // Announcements.vue

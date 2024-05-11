@@ -6,7 +6,7 @@ import store from '@/store'
 
 
 Vue.prototype.$http = axios
-axios.defaults.baseURL = 'http://localhost:8090/OnlineJudge'
+axios.defaults.baseURL = '/api'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.xsrfCookieName = 'csrftoken'
 
@@ -27,18 +27,17 @@ export default {
     return ajax('profile', 'get')
   },
   // 获取公告列表
-  getAnnouncementList(offset, limit) {
-    return ajax('admin/announcement', 'get', {
+  getAnnouncementList(page, limit) {
+    return ajax('announcement/admin/list', 'get', {
       params: {
-        paging: true,
-        offset,
+        page,
         limit
       }
     })
   },
   // 删除公告
   deleteAnnouncement(id) {
-    return ajax('admin/announcement', 'delete', {
+    return ajax('announcement', 'delete', {
       params: {
         id
       }
@@ -46,29 +45,29 @@ export default {
   },
   // 修改公告
   updateAnnouncement(data) {
-    return ajax('admin/announcement', 'put', {
+    return ajax('announcement', 'put', {
       data
     })
   },
   // 添加公告
   createAnnouncement(data) {
-    return ajax('admin/announcement', 'post', {
+    return ajax('announcement', 'post', {
       data
     })
   },
   // 获取用户列表
-  getUserList(offset, limit, keyword) {
-    let params = { paging: true, offset, limit }
+  getUserList(page, limit, keyword) {
+    let params = { page, limit }
     if (keyword) {
       params.keyword = keyword
     }
-    return ajax('admin/user', 'get', {
+    return ajax('user/list', 'get', {
       params: params
     })
   },
   // 获取单个用户信息
   getUser(id) {
-    return ajax('admin/user', 'get', {
+    return ajax('user', 'get', {
       params: {
         id
       }
@@ -76,72 +75,71 @@ export default {
   },
   // 编辑用户
   editUser(data) {
-    return ajax('admin/user', 'put', {
+    return ajax('user', 'put', {
       data
     })
   },
   deleteUsers(id) {
-    return ajax('admin/user', 'delete', {
+    return ajax('user', 'delete', {
       params: {
         id
       }
     })
   },
-  importUsers(users) {
-    return ajax('admin/user', 'post', {
-      data: {
-        users
-      }
+  importUsers(data) {
+    return ajax('user', 'post', {
+      data
     })
   },
   generateUser(data) {
-    return ajax('admin/generate_user', 'post', {
+    return ajax('user/generate_user', 'post', {
       data
     })
   },
   getLanguages() {
-    return ajax('/config/languages', 'get')
+    return ajax('config/languages', 'get')
   },
   getSMTPConfig() {
-    return ajax('admin/smtp', 'get')
+    return ajax('config/smtp', 'get')
   },
   createSMTPConfig(data) {
-    return ajax('admin/smtp', 'post', {
+    return ajax('config/smtp', 'post', {
       data
     })
   },
   editSMTPConfig(data) {
-    return ajax('admin/smtp', 'put', {
+    return ajax('config/smtp', 'put', {
       data
     })
   },
   testSMTPConfig(email) {
-    return ajax('admin/smtp_test', 'post', {
+    return ajax('config/smtp_test', 'post', {
       data: {
         email
       }
     })
   },
   getWebsiteConfig() {
-    return ajax('admin/website', 'get')
+    return ajax('config/website', 'get')
   },
   editWebsiteConfig(data) {
-    return ajax('admin/website', 'post', {
+    return ajax('config/website', 'post', {
       data
     })
   },
   getJudgeServer() {
-    return ajax('admin/judge_server', 'get')
+    return ajax('judgeServer', 'get')
   },
-  deleteJudgeServer(hostname) {
-    return ajax('admin/judge_server', 'delete', {
+  deleteJudgeServer(hostname, ip) {
+    return ajax('judgeServer', 'delete', {
       params: {
-        hostname: hostname
+        hostname: hostname,
+        ip: ip
       }
     })
   },
   updateJudgeServer(data) {
-    return ajax('admin/judge_server', 'put', {
+    return ajax('judgeServer', 'put', {
       data
     })
   },
@@ -206,7 +204,7 @@ export default {
     })
   },
   getProblemTagList(params) {
-    return ajax('problem/tags', 'get', {
+    return ajax('tag', 'get', {
       params
     })
   },
@@ -216,24 +214,24 @@ export default {
     })
   },
   createProblem(data) {
-    return ajax('admin/problem', 'post', {
+    return ajax('problem/admin', 'post', {
       data
     })
   },
   editProblem(data) {
-    return ajax('admin/problem', 'put', {
+    return ajax('problem/admin', 'put', {
       data
     })
   },
   deleteProblem(id) {
-    return ajax('admin/problem', 'delete', {
+    return ajax('problem/admin', 'delete', {
       params: {
         id
       }
     })
   },
   getProblem(id) {
-    return ajax('admin/problem', 'get', {
+    return ajax('problem/admin', 'get', {
       params: {
         id
       }
@@ -241,7 +239,7 @@ export default {
   },
   getProblemList(params) {
     params = utils.filterEmptyValue(params)
-    return ajax('problem/list', 'get', {
+    return ajax('problem/admin/list', 'get', {
       params
     })
   },
@@ -289,10 +287,7 @@ export default {
     return ajax('admin/versions', 'get')
   },
   getDashboardInfo() {
-    return ajax('admin/dashboard_info', 'get')
-  },
-  getSessions() {
-    return ajax('sessions', 'get')
+    return ajax('common/dashboard_info', 'get')
   },
   exportProblems(data) {
     return ajax('export_problem', 'post', {

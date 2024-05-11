@@ -5,11 +5,11 @@
         <span class="title">{{$t('m.' + status.statusName.replace(/ /g, "_"))}}</span>
         <div slot="desc" class="content">
           <template v-if="isCE">
-            <pre>{{submission.statistic_info.err_info}}</pre>
+            <pre>{{submission.statisticInfo.err_info}}</pre>
           </template>
           <template v-else>
-            <span>{{$t('m.Time')}}: {{submission.statistic_info.time_cost | submissionTime}}</span>
-            <span>{{$t('m.Memory')}}: {{submission.statistic_info.memory_cost | submissionMemory}}</span>
+            <span>{{$t('m.Time')}}: {{submission.statisticInfo.time_cost | submissionTime}}</span>
+            <span>{{$t('m.Memory')}}: {{submission.statisticInfo.memory_cost | submissionMemory}}</span>
             <span>{{$t('m.Lang')}}: {{submission.language}}</span>
             <span>{{$t('m.Author')}}: {{submission.username}}</span>
           </template>
@@ -66,7 +66,7 @@
             render: (h, params) => {
               return h('Tag', {
                 props: {
-                  color: JUDGE_STATUS[params.row.result].color
+                  color: JUDGE_STATUS[params.row.result].type
                 }
               }, this.$i18n.t('m.' + JUDGE_STATUS[params.row.result].name.replace(/ /g, '_')))
             }

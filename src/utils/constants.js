@@ -55,13 +55,13 @@ export const JUDGE_STATUS = {
   '7': {
     name: 'Judging',
     color: 'blue',
-    type: 'info'
+    type: 'primary'
   },
   '8': {
     name: 'Partial Accepted',
     short: 'PAC',
     color: 'blue',
-    type: 'info'
+    type: 'primary'
   },
   '9': {
     name: 'Submitting',

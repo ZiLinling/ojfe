@@ -8,7 +8,7 @@
             <li>
               <Dropdown @on-click="handleResultChange">
                 <span>{{status}}
-                  <Icon type="arrow-down-b"></Icon>
+                  <Icon type="md-arrow-dropdown"></Icon>
                 </span>
                 <Dropdown-menu slot="list">
                   <Dropdown-item name="">{{$t('m.All')}}</Dropdown-item>
@@ -21,7 +21,7 @@
 
 
             <li>
-              <i-switch size="large" v-model="formFilter.myself" @on-change="handleQueryChange">
+              <i-switch size="large" v-model="formFilter.myself" @on-change="handleQueryChange" v-if="isAuthenticated">
                 <span slot="open">{{$t('m.Mine')}}</span>
                 <span slot="close">{{$t('m.All')}}</span>
               </i-switch>
@@ -31,7 +31,7 @@
             </li>
 
             <li>
-              <Button type="info" icon="refresh" @click="getSubmissions">{{$t('m.Refresh')}}</Button>
+              <Button type="info" icon="md-refresh" @click="getSubmissions">{{$t('m.Refresh')}}</Button>
             </li>
           </ul>
         </div>
@@ -67,14 +67,14 @@
             title: this.$i18n.t('m.When'),
             align: 'center',
             render: (h, params) => {
-              return h('span', time.utcToLocal(params.row.create_time))
+              return h('span', params.row.createTime)
             }
           },
           {
             title: this.$i18n.t('m.ID'),
             align: 'center',
             render: (h, params) => {
-              if (params.row.show_link) {
+              if (params.row.userId==this.user.id) {
                 return h('span', {
                   style: {
                     color: '#57a3f3',
@@ -85,9 +85,9 @@
                       this.$router.push('/status/' + params.row.id)
                     }
                   }
-                }, params.row.id.slice(0, 12))
+                }, params.row.id.slice(0, 10))
               } else {
-                return h('span', params.row.id.slice(0, 12))
+                return h('span', params.row.id.slice(0, 10))
               }
             }
           },
@@ -97,7 +97,7 @@
             render: (h, params) => {
               return h('Tag', {
                 props: {
-                  color: JUDGE_STATUS[params.row.result].color
+                  color: JUDGE_STATUS[params.row.result].type
                 }
               }, this.$i18n.t('m.' + JUDGE_STATUS[params.row.result].name.replace(/ /g, '_')))
             }
@@ -118,29 +118,29 @@
                         this.$router.push(
                           {
                             name: 'contest-problem-details',
-                            params: {problemID: params.row.problem, contestID: this.contestID}
+                            params: {problemID: params.row.problemDisplayId, contestID: this.contestID}
                           })
                       } else {
-                        this.$router.push({name: 'problem-details', params: {problemID: params.row.problem}})
+                        this.$router.push({name: 'problem-details', params: {problemID: params.row.problemDisplayId}})
                       }
                     }
                   }
                 },
-                params.row.problem)
+                params.row.problemDisplayId)
             }
           },
           {
             title: this.$i18n.t('m.Time'),
             align: 'center',
             render: (h, params) => {
-              return h('span', utils.submissionTimeFormat(params.row.statistic_info.time_cost))
+              return h('span', utils.submissionTimeFormat(params.row.statisticInfo.time_cost))
             }
           },
           {
             title: this.$i18n.t('m.Memory'),
             align: 'center',
             render: (h, params) => {
-              return h('span', utils.submissionMemoryFormat(params.row.statistic_info.memory_cost))
+              return h('span', utils.submissionMemoryFormat(params.row.statisticInfo.memory_cost))
             }
           },
           {
@@ -173,7 +173,7 @@
         loadingTable: false,
         submissions: [],
         total: 30,
-        limit: 12,
+        limit: 10,
         page: 1,
         contestID: '',
         problemID: '',
@@ -216,18 +216,17 @@
         let params = this.buildQuery()
         params.contest_id = this.contestID
         params.problem_id = this.problemID
-        let offset = (this.page - 1) * this.limit
         let func = this.contestID ? 'getContestSubmissionList' : 'getSubmissionList'
         this.loadingTable = true
-        api[func](offset, this.limit, params).then(res => {
+        api[func](this.page, this.limit, params).then(res => {
           let data = res.data.data
-          for (let v of data.results) {
+          for (let v of data.records) {
             v.loading = false
           }
           this.adjustRejudgeColumn()
           this.loadingTable = false
-          this.submissions = data.results
-          this.total = data.total
+          this.submissions = data.records
+          this.total = data.totalRow
         }).catch(() => {
           this.loadingTable = false
         })

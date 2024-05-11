@@ -15,7 +15,7 @@ export default {
       if (this.statusColumn) return
       // 只在有做题记录时才添加column
       let needAdd = dataProblems.some((item, index) => {
-        if (item.my_status !== null && item.my_status !== undefined) {
+        if (item.myStatus !== null && item.myStatus !== undefined) {
           return true
         }
       })
@@ -26,13 +26,13 @@ export default {
         width: 60,
         title: ' ',
         render: (h, params) => {
-          let status = params.row.my_status
+          let status = params.row.myStatus
           if (status === null || status === undefined) {
             return undefined
           }
           return h('Icon', {
             props: {
-              type: status === 0 ? 'checkmark-round' : 'minus-round',
+              type: status === 0 ? 'md-checkmark' : 'md-remove',
               size: '16'
             },
             style: {
