@@ -111,6 +111,11 @@ export const m = {
   Contest_Status: 'Status',
   Allowed_IP_Ranges: 'Allowed IP Ranges',
   CIDR_Network: 'CIDR Network',
+  Underway:'Underway',
+  Not_Started:'Not Started',
+  Ended:'Ended',
+  Public:'Public',
+  Password_Protected:'Password Protected',
   // Dashboard.vue
   Last_Login: 'Last Login',
   Last_Status: 'Last Status',
@@ -125,4 +130,5 @@ export const m = {
   username: 'username',
   password: 'password',
   Logout: 'logout',
+  Creator:'Creator'
 }

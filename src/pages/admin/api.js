@@ -37,7 +37,7 @@ export default {
   },
   // 删除公告
   deleteAnnouncement(id) {
-    return ajax('announcement', 'delete', {
+    return ajax('announcement/admin/delete', 'delete', {
       params: {
         id
       }
@@ -45,13 +45,13 @@ export default {
   },
   // 修改公告
   updateAnnouncement(data) {
-    return ajax('announcement', 'put', {
+    return ajax('announcement/admin/update', 'put', {
       data
     })
   },
   // 添加公告
   createAnnouncement(data) {
-    return ajax('announcement', 'post', {
+    return ajax('announcement/admin/save', 'post', {
       data
     })
   },
@@ -113,7 +113,7 @@ export default {
     })
   },
   testSMTPConfig(email) {
-    return ajax('config/smtp_test', 'post', {
+    return ajax('config/smtp/test', 'post', {
       data: {
         email
       }
@@ -154,52 +154,54 @@ export default {
     })
   },
   createContest(data) {
-    return ajax('admin/contest', 'post', {
+    return ajax('contest/admin/save', 'post', {
       data
     })
   },
   getContest(id) {
-    return ajax('admin/contest', 'get', {
+    return ajax('contest/admin/get', 'get', {
       params: {
         id
       }
     })
   },
   editContest(data) {
-    return ajax('admin/contest', 'put', {
+    return ajax('contest/admin/update', 'put', {
       data
     })
   },
-  getContestList(offset, limit, keyword) {
-    let params = { paging: true, offset, limit }
+  getContestList(page, limit, keyword) {
+    let params = { page, limit }
     if (keyword) {
       params.keyword = keyword
     }
-    return ajax('admin/contest', 'get', {
+    return ajax('contest/admin/list', 'get', {
       params: params
     })
   },
-  getContestAnnouncementList(contestID) {
-    return ajax('admin/contest/announcement', 'get', {
-      params: {
-        contest_id: contestID
+  getContestAnnouncementList(page, limit,contestId) {
+    return ajax('announcement/admin/list', 'get', {
+      params: { 
+        page,
+        limit,
+        contestId: contestId
       }
     })
   },
   createContestAnnouncement(data) {
-    return ajax('admin/contest/announcement', 'post', {
+    return ajax('announcement/admin/save', 'post', {
       data
     })
   },
   deleteContestAnnouncement(id) {
-    return ajax('admin/contest/announcement', 'delete', {
+    return ajax('announcement/admin/delete', 'delete', {
       params: {
         id
       }
     })
   },
   updateContestAnnouncement(data) {
-    return ajax('admin/contest/announcement', 'put', {
+    return ajax('announcement/admin/update', 'put', {
       data
     })
   },
@@ -214,24 +216,24 @@ export default {
     })
   },
   createProblem(data) {
-    return ajax('problem/admin', 'post', {
+    return ajax('problem/admin/save', 'post', {
       data
     })
   },
   editProblem(data) {
-    return ajax('problem/admin', 'put', {
+    return ajax('problem/admin/update', 'put', {
       data
     })
   },
   deleteProblem(id) {
-    return ajax('problem/admin', 'delete', {
+    return ajax('problem/admin/delete', 'delete', {
       params: {
         id
       }
     })
   },
   getProblem(id) {
-    return ajax('problem/admin', 'get', {
+    return ajax('problem/admin/get', 'get', {
       params: {
         id
       }
@@ -245,41 +247,41 @@ export default {
   },
   getContestProblemList(params) {
     params = utils.filterEmptyValue(params)
-    return ajax('admin/contest/problem', 'get', {
+    return ajax('problem/admin/list', 'get', {
       params
     })
   },
   getContestProblem(id) {
-    return ajax('admin/contest/problem', 'get', {
+    return ajax('problem/admin/get', 'get', {
       params: {
         id
       }
     })
   },
   createContestProblem(data) {
-    return ajax('admin/contest/problem', 'post', {
+    return ajax('problem/admin/save', 'post', {
       data
     })
   },
   editContestProblem(data) {
-    return ajax('admin/contest/problem', 'put', {
+    return ajax('problem/admin/update', 'put', {
       data
     })
   },
   deleteContestProblem(id) {
-    return ajax('admin/contest/problem', 'delete', {
+    return ajax('problem/admin/delete', 'delete', {
       params: {
         id
       }
     })
   },
   makeContestProblemPublic(data) {
-    return ajax('admin/contest_problem/make_public', 'post', {
+    return ajax('problem/contest/make_public', 'post', {
       data
     })
   },
   addProblemFromPublic(data) {
-    return ajax('admin/contest/add_problem_from_public', 'post', {
+    return ajax('problem/contest/add_problem_from_public', 'post', {
       data
     })
   },

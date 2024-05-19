@@ -13,12 +13,8 @@
       </ul>
     </div>
     <Table :data="pagedAcInfo" :columns="columns" :loading="loadingTable" disabled-hover></Table>
-    <pagination :total="total"
-                :page-size.sync="limit"
-                :current.sync="page"
-                @on-change="handlePage"
-                @on-page-size-change="handlePage(1)"
-                show-sizer></pagination>
+    <pagination :total="total" :page-size.sync="limit" :current.sync="page" @on-change="handlePage"
+      @on-page-size-change="handlePage(1)" show-sizer></pagination>
   </panel>
 </template>
 <script>
@@ -134,7 +130,7 @@
       }
     },
     mounted () {
-      this.contestID = this.$route.params.contestID
+      this.contestId = this.$route.params.contestId
       if (this.contestProblems.length === 0) {
         this.getContestProblems().then((res) => {
           this.mapProblemDisplayID()
@@ -150,14 +146,14 @@
       mapProblemDisplayID () {
         let problemsMap = {}
         this.contestProblems.forEach(ele => {
-          problemsMap[ele.id] = ele._id
+          problemsMap[ele.id] = ele.displayId
         })
         this.problemsMap = problemsMap
       },
       getACInfo (page = 1) {
         this.loadingTable = true
         let params = {
-          contest_id: this.$route.params.contestID
+          contest_id: this.$route.params.contestId
         }
         api.getACMACInfo(params).then(res => {
           this.loadingTable = false
@@ -172,7 +168,7 @@
       updateCheckedStatus (row) {
         let data = {
           rank_id: row.id,
-          contest_id: this.contestID,
+          contest_id: this.contestId,
           problem_id: row.problem_id,
           checked: true
         }
@@ -229,6 +225,4 @@
     }
   }
 </script>
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

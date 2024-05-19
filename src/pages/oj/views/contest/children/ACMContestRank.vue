@@ -36,12 +36,8 @@
       <ECharts :options="options" ref="chart" auto-resize></ECharts>
     </div>
     <Table ref="tableRank" :columns="columns" :data="dataRank" disabled-hover height="600"></Table>
-    <Pagination :total="total"
-                :page-size.sync="limit"
-                :current.sync="page"
-                @on-change="getContestRankData"
-                @on-page-size-change="getContestRankData(1)"
-                show-sizer></Pagination>
+    <Pagination :total="total" :page-size.sync="limit" :current.sync="page" @on-change="getContestRankData"
+      @on-page-size-change="getContestRankData(1)" show-sizer></Pagination>
   </Panel>
 </template>
 <script>
@@ -63,7 +59,7 @@
       return {
         total: 0,
         page: 1,
-        contestID: '',
+        contestId: '',
         columns: [
           {
             align: 'center',
@@ -102,7 +98,7 @@
             width: 100,
             render: (h, params) => {
               return h('span', {}, [
-                h('span', {}, params.row.accepted_number + ' / '),
+                h('span', {}, params.row.acceptedNumber + ' / '),
                 h('a', {
                   on: {
                     click: () => {
@@ -112,7 +108,7 @@
                       })
                     }
                   }
-                }, params.row.submission_number)
+                }, params.row.submissionNumber)
               ])
             }
           },
@@ -121,7 +117,7 @@
             align: 'center',
             width: 100,
             render: (h, params) => {
-              return h('span', this.parseTotalTime(params.row.total_time))
+              return h('span', this.parseTotalTime(params.row.totalTime))
             }
           }
         ],
@@ -189,12 +185,12 @@
       }
     },
     mounted () {
-      this.contestID = this.$route.params.contestID
+      this.contestId = this.$route.params.contestId
       this.getContestRankData(1)
       if (this.contestProblems.length === 0) {
         this.getContestProblems().then((res) => {
-          this.addTableColumns(res.data.data)
-          this.addChartCategory(res.data.data)
+          this.addTableColumns(res.data.data.records)
+          this.addChartCategory(res.data.data.records)
         })
       } else {
         this.addTableColumns(this.contestProblems)
@@ -214,12 +210,12 @@
         let [users, seriesData] = [[], []]
         rankData.forEach(rank => {
           users.push(rank.user.username)
-          let info = rank.submission_info
+          let info = rank.submissionInfo
           // 提取出已AC题目的时间
           let timeData = []
-          Object.keys(info).forEach(problemID => {
-            if (info[problemID].is_ac) {
-              timeData.push(info[problemID].ac_time)
+          Object.keys(info).forEach(problemId => {
+            if (info[problemId].is_ac) {
+              timeData.push(info[problemId].ac_time)
             }
           })
           timeData.sort((a, b) => {
@@ -227,10 +223,10 @@
           })
 
           let data = []
-          data.push([this.contest.start_time, 0])
+          data.push([this.contest.startTime, 0])
           // index here can be regarded as stacked accepted number count.
           for (let [index, value] of timeData.entries()) {
-            let realTime = moment(this.contest.start_time).add(value, 'seconds').format()
+            let realTime = moment(this.contest.startTime).add(value, 'seconds').format()
             data.push([realTime, index + 1])
           }
           seriesData.push({
@@ -248,18 +244,18 @@
         // 从submission_info中取出相应的problem_id 放入到父object中,这么做主要是为了适应iview table的data格式
         // 见https://www.iviewui.com/components/table
         dataRank.forEach((rank, i) => {
-          let info = rank.submission_info
+          let info = rank.submissionInfo
           let cellClass = {}
-          Object.keys(info).forEach(problemID => {
-            dataRank[i][problemID] = info[problemID]
-            dataRank[i][problemID].ac_time = time.secondFormat(dataRank[i][problemID].ac_time)
-            let status = info[problemID]
+          Object.keys(info).forEach(problemId => {
+            dataRank[i][problemId] = info[problemId]
+            dataRank[i][problemId].ac_time = time.secondFormat(dataRank[i][problemId].ac_time)
+            let status = info[problemId]
             if (status.is_first_ac) {
-              cellClass[problemID] = 'first-ac'
+              cellClass[problemId] = 'first-ac'
             } else if (status.is_ac) {
-              cellClass[problemID] = 'ac'
+              cellClass[problemId] = 'ac'
             } else {
-              cellClass[problemID] = 'wa'
+              cellClass[problemId] = 'wa'
             }
           })
           dataRank[i].cellClassName = cellClass
@@ -283,13 +279,13 @@
                     this.$router.push({
                       name: 'contest-problem-details',
                       params: {
-                        contestID: this.contestID,
-                        problemID: problem._id
+                        contestId: this.contestId,
+                        problemId: problem.displayId
                       }
                     })
                   }
                 }
-              }, problem._id)
+              }, problem.displayId)
             },
             render: (h, params) => {
               if (params.row[problem.id]) {
@@ -312,31 +308,33 @@
         return [Math.floor(m.asHours()), m.minutes(), m.seconds()].join(':')
       },
       downloadRankCSV () {
-        utils.downloadFile(`contest_rank?download_csv=1&contest_id=${this.$route.params.contestID}&force_refrash=${this.forceUpdate ? '1' : '0'}`)
+        utils.downloadFile(`contest_rank?download_csv=1&contest_id=${this.$route.params.contestId}&force_refrash=${this.forceUpdate ? '1' : '0'}`)
       }
     }
   }
 </script>
 <style scoped lang="less">
-  .echarts {
-    margin: 20px auto;
-    height: 400px;
-    width: 98%;
-  }
+.echarts {
+  margin: 20px auto;
+  height: 400px;
+  width: 98%;
+}
 
-  .screen-full {
-    margin-right: 8px;
-  }
+.screen-full {
+  margin-right: 8px;
+}
 
-  #switches {
-    p {
-      margin-top: 5px;
-      &:first-child {
-        margin-top: 0;
-      }
-      span {
-        margin-left: 8px;
-      }
+#switches {
+  p {
+    margin-top: 5px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    span {
+      margin-left: 8px;
     }
   }
+}
 </style>

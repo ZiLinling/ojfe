@@ -51,7 +51,7 @@ export default [
   },
   {
     name: 'problem-details',
-    path: '/problem/:problemID',
+    path: '/problem/:problemId',
     meta: { title: 'Problem Details' },
     component: Problem
   },
@@ -75,7 +75,7 @@ export default [
   },
   {
     name: 'contest-details',
-    path: '/contest/:contestID/',
+    path: '/contest/:contestId/',
     component: Contest.ContestDetails,
     meta: { title: 'Contest Details' },
     children: [
@@ -91,7 +91,7 @@ export default [
       },
       {
         name: 'contest-problem-details',
-        path: 'problem/:problemID/',
+        path: 'problem/:problemId/',
         component: Problem
       },
       {

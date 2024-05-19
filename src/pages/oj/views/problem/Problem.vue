@@ -10,11 +10,11 @@
           <!-- {{$t('m.music')}} -->
           <p class="title">{{ $t('m.Input') }} <span v-if="problem.ioMode.io_mode == 'File IO'">({{ $t('m.FromFile') }}:
               {{
-                problem.ioMode.input }})</span></p>
+                            problem.ioMode.input }})</span></p>
           <p class="content" v-html=problem.inputDescription></p>
 
           <p class="title">{{ $t('m.Output') }} <span v-if="problem.ioMode.io_mode == 'File IO'">({{ $t('m.ToFile') }}: {{
-            problem.ioMode.output }})</span></p>
+                        problem.ioMode.output }})</span></p>
           <p class="content" v-html=problem.outputDescription></p>
 
           <div v-for="(sample, index) of problem.samples" :key="index">
@@ -56,20 +56,20 @@
         <Row type="flex" justify="space-between">
           <Col :span="10">
           <div class="status" v-if="statusVisible">
-            <template v-if="!this.contestID || (this.contestID && OIContestRealTimePermission)">
+            <template v-if="!this.contestId || (this.contestId && OIContestRealTimePermission)">
               <span>{{ $t('m.Status') }}</span>
               <Tag type="dot" :color="submissionStatus.color" @click.native="handleRoute('/status/' + submissionId)">
                 {{ $t('m.' + submissionStatus.text.replace(/ /g, "_")) }}
               </Tag>
             </template>
-            <template v-else-if="this.contestID && !OIContestRealTimePermission">
+            <template v-else-if="this.contestId && !OIContestRealTimePermission">
               <Alert type="success" show-icon>{{ $t('m.Submitted_successfully') }}</Alert>
             </template>
           </div>
-          <div v-else-if="problem.my_status === 0">
+          <div v-else-if="problem.myStatus === 0">
             <Alert type="success" show-icon>{{ $t('m.You_have_solved_the_problem') }}</Alert>
           </div>
-          <div v-else-if="this.contestID && !OIContestRealTimePermission && submissionExists">
+          <div v-else-if="this.contestId && !OIContestRealTimePermission && submissionExists">
             <Alert type="success" show-icon>{{ $t('m.You_have_submitted_a_solution') }}</Alert>
           </div>
           <div v-if="contestEnded">
@@ -98,31 +98,31 @@
 
     <div id="right-column">
       <VerticalMenu @on-click="handleRoute">
-        <template v-if="this.contestID">
-          <VerticalMenu-item :route="{ name: 'contest-problem-list', params: { contestID: contestID } }">
+        <template v-if="this.contestId">
+          <VerticalMenu-item :route="{ name: 'contest-problem-list', params: { contestId: contestId } }">
             <Icon type="ios-photos"></Icon>
             {{ $t('m.Problems') }}
           </VerticalMenu-item>
 
-          <VerticalMenu-item :route="{ name: 'contest-announcement-list', params: { contestID: contestID } }">
-            <Icon type="chatbubble-working"></Icon>
+          <VerticalMenu-item :route="{ name: 'contest-announcement-list', params: { contestId: contestId } }">
+            <Icon type="md-at"></Icon>
             {{ $t('m.Announcements') }}
           </VerticalMenu-item>
         </template>
 
-        <VerticalMenu-item v-if="!this.contestID || OIContestRealTimePermission" :route="submissionRoute">
+        <VerticalMenu-item v-if="!this.contestId || OIContestRealTimePermission" :route="submissionRoute">
           <Icon type="md-list"></Icon>
           {{ $t('m.Submissions') }}
         </VerticalMenu-item>
 
-        <template v-if="this.contestID">
-          <VerticalMenu-item v-if="!this.contestID || OIContestRealTimePermission"
-            :route="{ name: 'contest-rank', params: { contestID: contestID } }">
-            <Icon type="stats-bars"></Icon>
+        <template v-if="this.contestId">
+          <VerticalMenu-item v-if="!this.contestId || OIContestRealTimePermission"
+            :route="{ name: 'contest-rank', params: { contestId: contestId } }">
+            <Icon type="md-podium"></Icon>
             {{ $t('m.Rankings') }}
           </VerticalMenu-item>
-          <VerticalMenu-item :route="{ name: 'contest-details', params: { contestID: contestID } }">
-            <Icon type="home"></Icon>
+          <VerticalMenu-item :route="{ name: 'contest-details', params: { contestId: contestId } }">
+            <Icon type="md-home"></Icon>
             {{ $t('m.View_Contest') }}
           </VerticalMenu-item>
         </template>
@@ -175,7 +175,7 @@
         </ul>
       </Card>
 
-      <Card id="pieChart" :padding="0" v-if="!this.contestID || OIContestRealTimePermission">
+      <Card id="pieChart" :padding="0" v-if="!this.contestId || OIContestRealTimePermission">
         <div slot="title">
           <Icon type="ios-analytics"></Icon>
           <span class="card-title">{{ $t('m.Statistic') }}</span>
@@ -225,8 +225,8 @@ export default {
       submissionExists: false,
       captchaCode: '',
       captchaSrc: '',
-      contestID: '',
-      problemID: '',
+      contestId: '',
+      problemId: '',
       submitting: false,
       code: '',
       language: 'C++',
@@ -257,7 +257,7 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    let problemCode = storage.get(buildProblemCodeKey(to.params.problemID, to.params.contestID))
+    let problemCode = storage.get(buildProblemCodeKey(to.params.problemId, to.params.contestId))
     if (problemCode) {
       next(vm => {
         vm.language = problemCode.language
@@ -276,10 +276,10 @@ export default {
     ...mapActions(['changeDomTitle']),
     init() {
       this.$Loading.start()
-      this.contestID = this.$route.params.contestID
-      this.problemID = this.$route.params.problemID
+      this.contestId = this.$route.params.contestId
+      this.problemId = this.$route.params.problemId
       let func = this.$route.name === 'problem-details' ? 'getProblem' : 'getContestProblem'
-      api[func](this.problemID, this.contestID).then(res => {
+      api[func](this.problemId, this.contestId).then(res => {
         this.$Loading.finish()
         let problem = res.data.data
         this.changeDomTitle({ title: problem.title })
@@ -313,9 +313,9 @@ export default {
           delete problemData.statisticInfo[k]
         }
       }
-      let acNum = problemData.accepted_number
+      let acNum = problemData.acceptedNumber
       let data = [
-        { name: 'WA', value: problemData.submission_number - acNum },
+        { name: 'WA', value: problemData.submissionNumber - acNum },
         { name: 'AC', value: acNum }
       ]
       this.pie.series[0].data = data
@@ -406,7 +406,7 @@ export default {
         problemId: this.problem.id,
         language: this.language,
         code: this.code,
-        contest_id: this.contestID
+        contestId: this.contestId
       }
       if (this.captchaRequired) {
         data.captcha = this.captchaCode
@@ -482,10 +482,10 @@ export default {
       }
     },
     submissionRoute() {
-      if (this.contestID) {
-        return { name: 'contest-submission-list', query: { problemID: this.problemID } }
+      if (this.contestId) {
+        return { name: 'contest-submission-list', query: { problemId: this.problem.id } }
       } else {
-        return { name: 'submission-list', query: { problemID: this.problemID } }
+        return { name: 'submission-list', query: { problemId: this.problem.id } }
       }
     }
   },
@@ -494,7 +494,7 @@ export default {
     clearInterval(this.refreshStatus)
 
     this.$store.commit(types.CHANGE_CONTEST_ITEM_VISIBLE, { menu: true })
-    storage.set(buildProblemCodeKey(this.problem._id, from.params.contestID), {
+    storage.set(buildProblemCodeKey(this.problem.displayId, from.params.contestId), {
       code: this.code,
       language: this.language,
       theme: this.theme

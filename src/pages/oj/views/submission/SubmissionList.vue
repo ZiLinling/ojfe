@@ -27,7 +27,7 @@
               </i-switch>
             </li>
             <li>
-              <Input v-model="formFilter.username" :placeholder="$t('m.Search_Author')" @on-enter="handleQueryChange"/>
+              <Input v-model="formFilter.username" :placeholder="$t('m.Search_Author')" @on-enter="handleQueryChange" />
             </li>
 
             <li>
@@ -67,14 +67,18 @@
             title: this.$i18n.t('m.When'),
             align: 'center',
             render: (h, params) => {
-              return h('span', params.row.createTime)
+              return h('span', {
+                style: {
+                    "font-size":'12px',
+                  },
+              },params.row.createTime)
             }
           },
           {
             title: this.$i18n.t('m.ID'),
             align: 'center',
             render: (h, params) => {
-              if (params.row.userId==this.user.id) {
+              if (params.row.userId==this.user.id||params.row.shared) {
                 return h('span', {
                   style: {
                     color: '#57a3f3',
@@ -114,14 +118,14 @@
                   },
                   on: {
                     click: () => {
-                      if (this.contestID) {
+                      if (this.contestId) {
                         this.$router.push(
                           {
                             name: 'contest-problem-details',
-                            params: {problemID: params.row.problemDisplayId, contestID: this.contestID}
+                            params: {problemId: params.row.problemDisplayId, contestId: this.contestId}
                           })
                       } else {
-                        this.$router.push({name: 'problem-details', params: {problemID: params.row.problemDisplayId}})
+                        this.$router.push({name: 'problem-details', params: {problemId: params.row.problemDisplayId}})
                       }
                     }
                   }
@@ -175,8 +179,8 @@
         total: 30,
         limit: 10,
         page: 1,
-        contestID: '',
-        problemID: '',
+        contestId: '',
+        problemId: '',
         routeName: '',
         JUDGE_STATUS: '',
         rejudge_column: false
@@ -191,9 +195,9 @@
     },
     methods: {
       init () {
-        this.contestID = this.$route.params.contestID
+        this.contestId = this.$route.params.contestId
         let query = this.$route.query
-        this.problemID = query.problemID
+        this.problemId = query.problemId
         this.formFilter.myself = query.myself === '1'
         this.formFilter.result = query.result || ''
         this.formFilter.username = query.username || ''
@@ -214,9 +218,9 @@
       },
       getSubmissions () {
         let params = this.buildQuery()
-        params.contest_id = this.contestID
-        params.problem_id = this.problemID
-        let func = this.contestID ? 'getContestSubmissionList' : 'getSubmissionList'
+        params.contestId = this.contestId
+        params.problemId = this.problemId
+        let func = this.contestId ? 'getContestSubmissionList' : 'getSubmissionList'
         this.loadingTable = true
         api[func](this.page, this.limit, params).then(res => {
           let data = res.data.data
@@ -234,9 +238,9 @@
       // 改变route， 通过监听route变化请求数据，这样可以产生route history， 用户返回时就会保存之前的状态
       changeRoute () {
         let query = utils.filterEmptyValue(this.buildQuery())
-        query.contestID = this.contestID
-        query.problemID = this.problemID
-        let routeName = query.contestID ? 'contest-submission-list' : 'submission-list'
+        query.contestId = this.contestId
+        query.problemId = this.problemId
+        let routeName = query.contestId ? 'contest-submission-list' : 'submission-list'
         this.$router.push({
           name: routeName,
           query: utils.filterEmptyValue(query)
@@ -295,9 +299,9 @@
     computed: {
       ...mapGetters(['isAuthenticated', 'user']),
       title () {
-        if (!this.contestID) {
+        if (!this.contestId) {
           return this.$i18n.t('m.Status')
-        } else if (this.problemID) {
+        } else if (this.problemId) {
           return this.$i18n.t('m.Problem_Submissions')
         } else {
           return this.$i18n.t('m.Submissions')
@@ -307,7 +311,7 @@
         return this.formFilter.result === '' ? this.$i18n.t('m.Status') : this.$i18n.t('m.' + JUDGE_STATUS[this.formFilter.result].name.replace(/ /g, '_'))
       },
       rejudgeColumnVisible () {
-        return !this.contestID && this.user.admin_type === USER_TYPE.SUPER_ADMIN
+        return !this.contestId && this.user.admin_type === USER_TYPE.SUPER_ADMIN
       }
     },
     watch: {
@@ -327,21 +331,23 @@
 </script>
 
 <style scoped lang="less">
-  .ivu-btn-text {
-    color: #57a3f3;
+.ivu-btn-text {
+  color: #57a3f3;
+}
+
+.flex-container {
+  #main {
+    flex: auto;
+    margin-right: 18px;
+
+    .filter {
+      margin-right: -10px;
+    }
   }
 
-  .flex-container {
-    #main {
-      flex: auto;
-      margin-right: 18px;
-      .filter {
-        margin-right: -10px;
-      }
-    }
-    #contest-menu {
-      flex: none;
-      width: 210px;
-    }
+  #contest-menu {
+    flex: none;
+    width: 210px;
   }
+}
 </style>

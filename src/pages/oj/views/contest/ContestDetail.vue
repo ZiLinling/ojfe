@@ -34,19 +34,19 @@
     </div>
     <div v-show="showMenu" id="contest-menu">
       <VerticalMenu @on-click="handleRoute">
-        <VerticalMenu-item :route="{name: 'contest-details', params: {contestID: contestID}}">
-          <Icon type="home"></Icon>
+        <VerticalMenu-item :route="{name: 'contest-details', params: {contestId: contestId}}">
+          <Icon type="md-home"></Icon>
           {{$t('m.Overview')}}
         </VerticalMenu-item>
 
         <VerticalMenu-item :disabled="contestMenuDisabled"
-                           :route="{name: 'contest-announcement-list', params: {contestID: contestID}}">
-          <Icon type="chatbubble-working"></Icon>
+                           :route="{name: 'contest-announcement-list', params: {contestId: contestId}}">
+          <Icon type="md-at"></Icon>
           {{$t('m.Announcements')}}
         </VerticalMenu-item>
 
         <VerticalMenu-item :disabled="contestMenuDisabled"
-                           :route="{name: 'contest-problem-list', params: {contestID: contestID}}">
+                           :route="{name: 'contest-problem-list', params: {contestId: contestId}}">
           <Icon type="ios-photos"></Icon>
           {{$t('m.Problems')}}
         </VerticalMenu-item>
@@ -54,22 +54,22 @@
         <VerticalMenu-item v-if="OIContestRealTimePermission"
                            :disabled="contestMenuDisabled"
                            :route="{name: 'contest-submission-list'}">
-          <Icon type="navicon-round"></Icon>
+          <Icon type="md-menu"></Icon>
           {{$t('m.Submissions')}}
         </VerticalMenu-item>
 
         <VerticalMenu-item v-if="OIContestRealTimePermission"
                            :disabled="contestMenuDisabled"
-                           :route="{name: 'contest-rank', params: {contestID: contestID}}">
-          <Icon type="stats-bars"></Icon>
+                           :route="{name: 'contest-rank', params: {contestId: contestId}}">
+          <Icon type="md-podium"></Icon>
           {{$t('m.Rankings')}}
         </VerticalMenu-item>
 
-        <VerticalMenu-item v-if="showAdminHelper"
-                           :route="{name: 'acm-helper', params: {contestID: contestID}}">
+        <!-- <VerticalMenu-item v-if="showAdminHelper"
+                           :route="{name: 'acm-helper', params: {contestId: contestId}}">
           <Icon type="ios-paw"></Icon>
           {{$t('m.Admin_Helper')}}
-        </VerticalMenu-item>
+        </VerticalMenu-item> -->
       </VerticalMenu>
     </div>
   </div>
@@ -91,49 +91,49 @@
         CONTEST_STATUS: CONTEST_STATUS,
         route_name: '',
         btnLoading: false,
-        contestID: '',
+        contestId: '',
         contestPassword: '',
         columns: [
           {
             title: this.$i18n.t('m.StartAt'),
             render: (h, params) => {
-              return h('span', time.utcToLocal(params.row.start_time))
+              return h('span', params.row.startTime)
             }
           },
           {
             title: this.$i18n.t('m.EndAt'),
             render: (h, params) => {
-              return h('span', time.utcToLocal(params.row.end_time))
+              return h('span', params.row.endTime)
             }
           },
           {
             title: this.$i18n.t('m.ContestType'),
             render: (h, params) => {
-              return h('span', this.$i18n.t('m.' + params.row.contest_type ? params.row.contest_type.replace(' ', '_') : ''))
+              return h('span', this.$t('m.'+ params.row.contestType.replace(' ', '_')))
             }
           },
           {
             title: this.$i18n.t('m.Rule'),
             render: (h, params) => {
-              return h('span', this.$i18n.t('m.' + params.row.rule_type))
+              return h('span', this.$i18n.t('m.' + params.row.ruleType))
             }
           },
           {
             title: this.$i18n.t('m.Creator'),
             render: (h, data) => {
-              return h('span', data.row.created_by.username)
+              return h('span', data.row.creator)
             }
           }
         ]
       }
     },
     mounted () {
-      this.contestID = this.$route.params.contestID
+      this.contestId = this.$route.params.contestId
       this.route_name = this.$route.name
       this.$store.dispatch('getContest').then(res => {
         this.changeDomTitle({title: res.data.data.title})
         let data = res.data.data
-        let endTime = moment(data.end_time)
+        let endTime = moment(data.endTime)
         if (endTime.isAfter(moment(data.now))) {
           this.timer = setInterval(() => {
             this.$store.commit(types.NOW_ADD_1S)
@@ -152,7 +152,7 @@
           return
         }
         this.btnLoading = true
-        api.checkContestPassword(this.contestID, this.contestPassword).then((res) => {
+        api.checkContestPassword(this.contestId, this.contestPassword).then((res) => {
           this.$success('Succeeded')
           this.$store.commit(types.CONTEST_ACCESS, {access: true})
           this.btnLoading = false
@@ -184,7 +184,7 @@
     watch: {
       '$route' (newVal) {
         this.route_name = newVal.name
-        this.contestID = newVal.params.contestID
+        this.contestId = newVal.params.contestId
         this.changeDomTitle({title: this.contest.title})
       }
     },

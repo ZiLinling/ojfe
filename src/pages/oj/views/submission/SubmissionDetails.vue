@@ -25,7 +25,7 @@
     <Col :span="20">
       <Highlight :code="submission.code" :language="submission.language" :border-color="status.color"></Highlight>
     </Col>
-    <Col v-if="submission.can_unshare" :span="20">
+    <Col :span="20">
       <div id="share-btn">
         <Button v-if="submission.shared"
                 type="warning" size="large" @click="shareSubmission(false)">

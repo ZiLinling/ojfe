@@ -1,42 +1,22 @@
 <template>
   <div>
-    <el-input
-      v-model="keyword"
-      placeholder="Keywords"
-      prefix-icon="el-icon-search">
+    <el-input v-model="keyword" placeholder="Keywords" prefix-icon="el-icon-search">
     </el-input>
     <el-table :data="problems" v-loading="loading">
-      <el-table-column
-        label="ID"
-        width="100"
-        prop="id">
+      <el-table-column label="ID" width="100" prop="id" align="center">
       </el-table-column>
-      <el-table-column
-        label="DisplayID"
-        width="200"
-        prop="_id">
+      <el-table-column label="DisplayID" width="200" prop="displayId" align="center">
       </el-table-column>
-      <el-table-column
-        label="Title"
-        prop="title">
+      <el-table-column label="Title" prop="title" align="center">
       </el-table-column>
-      <el-table-column
-        label="option"
-        align="center"
-        width="100"
-        fixed="right">
+      <el-table-column label="option" align="center" width="100" fixed="right">
         <template slot-scope="{row}">
-          <icon-btn icon="plus" name="Add the problem"
-                    @click.native="handleAddProblem(row.id)"></icon-btn>
+          <icon-btn icon="plus" name="Add the problem" @click.native="handleAddProblem(row.id)"></icon-btn>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      class="page"
-      layout="prev, pager, next"
-      @current-change="getPublicProblem"
-      :page-size="limit"
+    <el-pagination class="page" layout="prev, pager, next" @current-change="getPublicProblem" :page-size="limit"
       :total="total">
     </el-pagination>
   </div>
@@ -46,7 +26,7 @@
 
   export default {
     name: 'add-problem-from-public',
-    props: ['contestID'],
+    props: ['contestId'],
     data () {
       return {
         page: 1,
@@ -59,9 +39,9 @@
       }
     },
     mounted () {
-      api.getContest(this.contestID).then(res => {
+      api.getContest(this.contestId).then(res => {
         this.contest = res.data.data
-        this.getPublicProblem()
+        this.getPublicProblem(1)
       }).catch(() => {
       })
     },
@@ -70,23 +50,23 @@
         this.loading = true
         let params = {
           keyword: this.keyword,
-          offset: (page - 1) * this.limit,
+          page:page,
           limit: this.limit,
-          rule_type: this.contest.rule_type
+          ruleType: this.contest.ruleType
         }
         api.getProblemList(params).then(res => {
           this.loading = false
-          this.total = res.data.data.total
-          this.problems = res.data.data.results
+          this.total = res.data.data.totalRow
+          this.problems = res.data.data.records
         }).catch(() => {
         })
       },
-      handleAddProblem (problemID) {
+      handleAddProblem (problemId) {
         this.$prompt('Please input display id for the contest problem', 'confirm').then(({value}) => {
           let data = {
-            problem_id: problemID,
-            contest_id: this.contestID,
-            display_id: value
+            problemId: problemId,
+            contestId: this.contestId,
+            displayId: value
           }
           api.addProblemFromPublic(data).then(() => {
             this.$emit('on-change')
@@ -104,9 +84,8 @@
   }
 </script>
 <style scoped>
-  .page {
-    margin-top: 20px;
-    text-align: right
-  }
-
+.page {
+  margin-top: 20px;
+  text-align: right
+}
 </style>

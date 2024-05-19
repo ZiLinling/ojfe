@@ -9,8 +9,8 @@ const state = {
   rankLimit: 30,
   forceUpdate: false,
   contest: {
-    created_by: {},
-    contest_type: CONTEST_TYPE.PUBLIC
+    createdById: null,
+    contestType: CONTEST_TYPE.PUBLIC
   },
   contestProblems: [],
   itemVisible: {
@@ -23,14 +23,13 @@ const state = {
 const getters = {
   // contest 是否加载完成
   contestLoaded: (state) => {
-    return !!state.contest.status
+    return state.contest.status!=null
   },
   contestStatus: (state, getters) => {
     if (!getters.contestLoaded) return null
-    let startTime = moment(state.contest.start_time)
-    let endTime = moment(state.contest.end_time)
+    let startTime = moment(state.contest.startTime)
+    let endTime = moment(state.contest.endTime)
     let now = state.now
-
     if (startTime > now) {
       return CONTEST_STATUS.NOT_START
     } else if (endTime < now) {
@@ -40,15 +39,15 @@ const getters = {
     }
   },
   contestRuleType: (state) => {
-    return state.contest.rule_type || null
+    return state.contest.ruleType || null
   },
   isContestAdmin: (state, getters, _, rootGetters) => {
     return rootGetters.isAuthenticated &&
-      (state.contest.created_by.id === rootGetters.user.id || rootGetters.user.admin_type === USER_TYPE.SUPER_ADMIN)
+      (state.contest.createdById === rootGetters.user.id || rootGetters.user.adminType === USER_TYPE.SUPER_ADMIN)
   },
   contestMenuDisabled: (state, getters) => {
     if (getters.isContestAdmin) return false
-    if (state.contest.contest_type === CONTEST_TYPE.PUBLIC) {
+    if (state.contest.contestType === CONTEST_TYPE.PUBLIC) {
       return getters.contestStatus === CONTEST_STATUS.NOT_START
     }
     return !state.access
@@ -57,7 +56,7 @@ const getters = {
     if (getters.contestRuleType === 'ACM' || getters.contestStatus === CONTEST_STATUS.ENDED) {
       return true
     }
-    return state.contest.real_time_rank === true || getters.isContestAdmin
+    return state.contest.realTimeRank === true || getters.isContestAdmin
   },
   problemSubmitDisabled: (state, getters, _, rootGetters) => {
     if (getters.contestStatus === CONTEST_STATUS.ENDED) {
@@ -68,13 +67,13 @@ const getters = {
     return !rootGetters.isAuthenticated
   },
   passwordFormVisible: (state, getters) => {
-    return state.contest.contest_type !== CONTEST_TYPE.PUBLIC && !state.access && !getters.isContestAdmin
+    return state.contest.contestType !== CONTEST_TYPE.PUBLIC && !state.access && !getters.isContestAdmin
   },
   contestStartTime: (state) => {
-    return moment(state.contest.start_time)
+    return moment(state.contest.startTime)
   },
   contestEndTime: (state) => {
-    return moment(state.contest.end_time)
+    return moment(state.contest.endTime)
   },
   countdown: (state, getters) => {
     if (getters.contestStatus === CONTEST_STATUS.NOT_START) {
@@ -115,7 +114,7 @@ const mutations = {
     state.access = payload.access
   },
   [types.CLEAR_CONTEST] (state) {
-    state.contest = {created_by: {}}
+    state.contest = {createdById: null}
     state.contestProblems = []
     state.access = false
     state.itemVisible = {
@@ -136,12 +135,12 @@ const mutations = {
 const actions = {
   getContest ({commit, rootState, dispatch}) {
     return new Promise((resolve, reject) => {
-      api.getContest(rootState.route.params.contestID).then((res) => {
+      api.getContest(rootState.route.params.contestId).then((res) => {
         resolve(res)
         let contest = res.data.data
         commit(types.CHANGE_CONTEST, {contest: contest})
         commit(types.NOW, {now: moment(contest.now)})
-        if (contest.contest_type === CONTEST_TYPE.PRIVATE) {
+        if (contest.contestType === CONTEST_TYPE.PRIVATE) {
           dispatch('getContestAccess')
         }
       }, err => {
@@ -151,16 +150,16 @@ const actions = {
   },
   getContestProblems ({commit, rootState}) {
     return new Promise((resolve, reject) => {
-      api.getContestProblemList(rootState.route.params.contestID).then(res => {
-        res.data.data.sort((a, b) => {
-          if (a._id === b._id) {
+      api.getContestProblemList(rootState.route.params.contestId).then(res => {
+        res.data.data.records.sort((a, b) => {
+          if (a.displayId === b.displayId) {
             return 0
-          } else if (a._id > b._id) {
+          } else if (a.displayId > b.displayId) {
             return 1
           }
           return -1
         })
-        commit(types.CHANGE_CONTEST_PROBLEMS, {contestProblems: res.data.data})
+        commit(types.CHANGE_CONTEST_PROBLEMS, {contestProblems: res.data.data.records})
         resolve(res)
       }, () => {
         commit(types.CHANGE_CONTEST_PROBLEMS, {contestProblems: []})
@@ -169,7 +168,7 @@ const actions = {
   },
   getContestAccess ({commit, rootState}) {
     return new Promise((resolve, reject) => {
-      api.getContestAccess(rootState.route.params.contestID).then(res => {
+      api.getContestAccess(rootState.route.params.contestId).then(res => {
         commit(types.CONTEST_ACCESS, {access: res.data.data.access})
         resolve(res)
       }).catch()

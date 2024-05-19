@@ -17,12 +17,9 @@ export default {
    * @param {string} key 键
    * @return {Object}
    */
-  get(key) {
-    let item = localStorage.getItem(key);
-    if (item == 'undefined' || item == null)
-      return null;
-    return JSON.parse(item);
-
+   get (key) {
+    console.log(localStorage.getItem(key))
+    return JSON.parse(localStorage.getItem(key)) || null
   },
 
   /**

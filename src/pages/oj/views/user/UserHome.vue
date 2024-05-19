@@ -41,20 +41,20 @@
           </div>
           <p v-else>{{$t('m.UserHomeIntro')}}</p>
           <div class="btns">
-            <div class="problem-btn" v-for="problemID of problems" :key="problemID">
-              <Button type="ghost" @click="goProblem(problemID)">{{problemID}}</Button>
+            <div class="problem-btn" v-for="problemId of problems" :key="problemId">
+              <Button type="default" @click="goProblem(problemId)">{{problemId}}</Button>
             </div>
           </div>
         </div>
         <div id="icons">
           <a :href="profile.github">
-            <Icon type="social-github-outline" size="30"></Icon>
+            <Icon type="logo-github" size="30"></Icon>
           </a>
           <a :href="'mailto:'+ profile.user.email">
-            <Icon class="icon" type="ios-email-outline" size="30"></Icon>
+            <Icon class="icon" type="ios-mail" size="30"></Icon>
           </a>
           <a :href="profile.blog">
-            <Icon class="icon" type="ios-world-outline" size="30"></Icon>
+            <Icon class="icon" type="logo-wordpress" size="30"></Icon>
           </a>
         </div>
       </div>
@@ -88,22 +88,22 @@
         })
       },
       getSolvedProblems () {
-        let ACMProblems = this.profile.acmProblemsStatus.problems || {}
-        let OIProblems = this.profile.oiProblemsStatus.problems || {}
+        let ACMProblems = this.profile.acmProblemsStatus || {}
+        let OIProblems = this.profile.oiProblemsStatus || {}
         // todo oi problems
         let ACProblems = []
         for (let problems of [ACMProblems, OIProblems]) {
-          Object.keys(problems).forEach(problemID => {
-            if (problems[problemID]['status'] === 0) {
-              ACProblems.push(problems[problemID]['_id'])
+          Object.keys(problems).forEach(problemId => {
+            if (problems[problemId]['status'] === 0) {
+              ACProblems.push(problems[problemId]['displayId'])
             }
           })
         }
         ACProblems.sort()
         this.problems = ACProblems
       },
-      goProblem (problemID) {
-        this.$router.push({name: 'problem-details', params: {problemID: problemID}})
+      goProblem (problemId) {
+        this.$router.push({name: 'problem-details', params: {problemId: problemId}})
       },
       freshProblemDisplayID () {
         api.freshDisplayID().then(res => {

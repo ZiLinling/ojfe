@@ -31,7 +31,7 @@
         <div class="panel-options">
           <el-button type="primary" size="small" @click="openAnnouncementDialog(null)"
             icon="el-icon-plus">Create</el-button>
-          <el-pagination v-if="!contestID" class="page" layout="prev, pager, next" @current-change="currentChange"
+          <el-pagination class="page" layout="prev, pager, next" @current-change="currentChange"
             :page-size="pageSize" :total="total">
           </el-pagination>
         </div>
@@ -73,7 +73,7 @@ export default {
   },
   data() {
     return {
-      contestID: '',
+      contestId: '',
       // 显示编辑公告对话框
       showEditAnnouncementDialog: false,
       // 公告列表
@@ -104,9 +104,9 @@ export default {
   },
   methods: {
     init() {
-      this.contestID = this.$route.params.contestId
-      if (this.contestID) {
-        this.getContestAnnouncementList()
+      this.contestId = this.$route.params.contestId
+      if (this.contestId) {
+        this.getContestAnnouncementList(1)
       } else {
         this.getAnnouncementList(1)
       }
@@ -126,11 +126,12 @@ export default {
         this.loading = false
       })
     },
-    getContestAnnouncementList() {
+    getContestAnnouncementList(page) {
       this.loading = true
-      api.getContestAnnouncementList(this.contestID).then(res => {
+      api.getContestAnnouncementList(page, this.pageSize,this.contestId).then(res => {
         this.loading = false
-        this.announcementList = res.data.data
+        this.total = res.data.data.totalRow
+        this.announcementList = res.data.data.records
       }).catch(() => {
         this.loading = false
       })
@@ -161,8 +162,8 @@ export default {
           visible: this.announcement.visible
         }
       }
-      if (this.contestID) {
-        data.contest_id = this.contestID
+      if (this.contestId) {
+        data.contestId = this.contestId
         funcName = this.mode === 'edit' ? 'updateContestAnnouncement' : 'createContestAnnouncement'
       } else {
         funcName = this.mode === 'edit' ? 'updateAnnouncement' : 'createAnnouncement'
@@ -181,7 +182,7 @@ export default {
       }).then(() => {
         // then 为确定
         this.loading = true
-        let funcName = this.contestID ? 'deleteContestAnnouncement' : 'deleteAnnouncement'
+        let funcName = this.contestId ? 'deleteContestAnnouncement' : 'deleteAnnouncement'
         api[funcName](announcementId).then(res => {
           this.loading = true
           this.init()

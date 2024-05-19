@@ -40,7 +40,7 @@
       </div>
       <panel :title="$t('m.System_Overview')" v-if="isSuperAdmin">
         <p>{{$t('m.DashBoardJudge_Server')}}:  {{infoData.judge_server_count}}</p>
-        <p>{{$t('m.HTTPS_Status')}}:
+        <!-- <p>{{$t('m.HTTPS_Status')}}:
           <el-tag :type="https ? 'success' : 'danger'" size="small">
             {{ https ? 'Enabled' : 'Disabled'}}
           </el-tag>
@@ -54,7 +54,7 @@
           <el-tag :type="cdn ? 'success' : 'warning'" size="small">
             {{cdn ? cdn : 'Not Use'}}
           </el-tag>
-        </p>
+        </p> -->
       </panel>
     </el-col>
   </el-row>

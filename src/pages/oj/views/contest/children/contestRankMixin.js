@@ -9,29 +9,28 @@ export default {
     ScreenFull
   },
   methods: {
-    getContestRankData (page = 1, refresh = false) {
-      let offset = (page - 1) * this.limit
+    getContestRankData(page = 1, refresh = false) {
       if (this.showChart && !refresh) {
-        this.$refs.chart.showLoading({maskColor: 'rgba(250, 250, 250, 0.8)'})
+        this.$refs.chart.showLoading({ maskColor: 'rgba(250, 250, 250, 0.8)' })
       }
       let params = {
-        offset,
+        page,
         limit: this.limit,
-        contest_id: this.$route.params.contestID,
-        force_refresh: this.forceUpdate ? '1' : '0'
+        contestId: this.$route.params.contestId,
+        forceRefresh: this.forceUpdate ? '1' : '0'
       }
-      api.getContestRank(params).then(res => {
+      api.getContestRank(params,this.contest.ruleType).then(res => {
         if (this.showChart && !refresh) {
           this.$refs.chart.hideLoading()
         }
-        this.total = res.data.data.total
+        this.total = res.data.data.totalRow
         if (page === 1) {
-          this.applyToChart(res.data.data.results.slice(0, 10))
+          this.applyToChart(res.data.data.records.slice(0, 10))
         }
-        this.applyToTable(res.data.data.results)
+        this.applyToTable(res.data.data.records)
       })
     },
-    handleAutoRefresh (status) {
+    handleAutoRefresh(status) {
       if (status === true) {
         this.refreshFunc = setInterval(() => {
           this.page = 1
@@ -49,19 +48,19 @@ export default {
       'contestProblems': state => state.contest.contestProblems
     }),
     showChart: {
-      get () {
+      get() {
         return this.$store.state.contest.itemVisible.chart
       },
-      set (value) {
-        this.$store.commit(types.CHANGE_CONTEST_ITEM_VISIBLE, {chart: value})
+      set(value) {
+        this.$store.commit(types.CHANGE_CONTEST_ITEM_VISIBLE, { chart: value })
       }
     },
     showMenu: {
-      get () {
+      get() {
         return this.$store.state.contest.itemVisible.menu
       },
-      set (value) {
-        this.$store.commit(types.CHANGE_CONTEST_ITEM_VISIBLE, {menu: value})
+      set(value) {
+        this.$store.commit(types.CHANGE_CONTEST_ITEM_VISIBLE, { menu: value })
         this.$nextTick(() => {
           if (this.showChart) {
             this.$refs.chart.resize()
@@ -71,17 +70,17 @@ export default {
       }
     },
     showRealName: {
-      get () {
+      get() {
         return this.$store.state.contest.itemVisible.realName
       },
-      set (value) {
-        this.$store.commit(types.CHANGE_CONTEST_ITEM_VISIBLE, {realName: value})
+      set(value) {
+        this.$store.commit(types.CHANGE_CONTEST_ITEM_VISIBLE, { realName: value })
         if (value) {
           this.columns.splice(2, 0, {
             title: 'RealName',
             align: 'center',
             width: 150,
-            render: (h, {row}) => {
+            render: (h, { row }) => {
               return h('span', row.user.real_name)
             }
           })
@@ -91,26 +90,26 @@ export default {
       }
     },
     forceUpdate: {
-      get () {
+      get() {
         return this.$store.state.contest.forceUpdate
       },
-      set (value) {
-        this.$store.commit(types.CHANGE_RANK_FORCE_UPDATE, {value: value})
+      set(value) {
+        this.$store.commit(types.CHANGE_RANK_FORCE_UPDATE, { value: value })
       }
     },
     limit: {
-      get () {
+      get() {
         return this.$store.state.contest.rankLimit
       },
-      set (value) {
-        this.$store.commit(types.CHANGE_CONTEST_RANK_LIMIT, {rankLimit: value})
+      set(value) {
+        this.$store.commit(types.CHANGE_CONTEST_RANK_LIMIT, { rankLimit: value })
       }
     },
-    refreshDisabled () {
+    refreshDisabled() {
       return this.contest.status === CONTEST_STATUS.ENDED
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     clearInterval(this.refreshFunc)
   }
 }

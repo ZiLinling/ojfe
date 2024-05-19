@@ -23,11 +23,7 @@
             </div>
           </li>
         </ul>
-        <Pagination v-if="!isContest"
-                    key="page"
-                    :total="total"
-                    :page-size="limit"
-                    @on-change="getAnnouncementList">
+        <Pagination v-if="!isContest" key="page" :total="total" :page-size="limit" @on-change="getAnnouncementList">
         </Pagination>
       </template>
 
@@ -80,9 +76,9 @@ export default {
     },
     getContestAnnouncementList () {
       this.btnLoading = true
-      api.getContestAnnouncementList(this.$route.params.contestID).then(res => {
+      api.getContestAnnouncementList(this.$route.params.contestId).then(res => {
         this.btnLoading = false
-        this.announcements = res.data.data
+        this.announcements = res.data.data.records
       }, () => {
         this.btnLoading = false
       })
@@ -105,7 +101,7 @@ export default {
       }
     },
     isContest() {
-      return !!this.$route.params.contestID
+      return !!this.$route.params.contestId
     }
   }
 }
@@ -170,4 +166,5 @@ export default {
 
 changeLocale .announcement-animate-enter-active {
   animation: fadeIn 1s;
-}</style>
+}
+</style>

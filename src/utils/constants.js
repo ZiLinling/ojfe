@@ -50,7 +50,7 @@ export const JUDGE_STATUS = {
   '6': {
     name: 'Pending',
     color: 'yellow',
-    type: 'warning'
+    type: 'primary'
   },
   '7': {
     name: 'Judging',
@@ -78,7 +78,7 @@ export const CONTEST_STATUS = {
 
 export const CONTEST_STATUS_REVERSE = {
   '1': {
-    name: 'Not Started',
+    name: 'Not_Started',
     color: 'warning'
   },
   '0': {
@@ -119,11 +119,11 @@ export const STORAGE_KEY = {
   languages: 'languages'
 }
 
-export function buildProblemCodeKey (problemID, contestID = null) {
-  if (contestID) {
-    return `${STORAGE_KEY.PROBLEM_CODE}_${contestID}_${problemID}`
+export function buildProblemCodeKey(problemId, contestId = null) {
+  if (contestId) {
+    return `${STORAGE_KEY.PROBLEM_CODE}_${contestId}_${problemId}`
   }
-  return `${STORAGE_KEY.PROBLEM_CODE}_NaN_${problemID}`
+  return `${STORAGE_KEY.PROBLEM_CODE}_NaN_${problemId}`
 }
 
 export const GOOGLE_ANALYTICS_ID = 'UA-111499601-1'

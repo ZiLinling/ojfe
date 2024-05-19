@@ -62,30 +62,30 @@
             }
           },
           {
-            title: this.$i18n.t('m.mood'),
+            title: this.$i18n.t('m.Mood'),
             align: 'center',
             key: 'mood'
           },
           {
             title: this.$i18n.t('m.Score'),
             align: 'center',
-            key: 'total_score'
+            key: 'totalScore'
           },
           {
             title: this.$i18n.t('m.AC'),
             align: 'center',
-            key: 'accepted_number'
+            key: 'acceptedNumber'
           },
           {
             title: this.$i18n.t('m.Total'),
             align: 'center',
-            key: 'submission_number'
+            key: 'submissionNumber'
           },
           {
             title: this.$i18n.t('m.Rating'),
             align: 'center',
             render: (h, params) => {
-              return h('span', utils.getACRate(params.row.accepted_number, params.row.submission_number))
+              return h('span', utils.getACRate(params.row.acceptedNumber, params.row.submissionNumber))
             }
           }
         ],
@@ -155,15 +155,14 @@
     },
     methods: {
       getRankData (page) {
-        let offset = (page - 1) * this.limit
         let bar = this.$refs.chart
         bar.showLoading({maskColor: 'rgba(250, 250, 250, 0.8)'})
-        api.getUserRank(offset, this.limit, RULE_TYPE.OI).then(res => {
+        api.getUserRank(page, this.limit, RULE_TYPE.OI).then(res => {
           if (page === 1) {
-            this.changeCharts(res.data.data.results.slice(0, 10))
+            this.changeCharts(res.data.data.records.slice(0, 10))
           }
-          this.total = res.data.data.total
-          this.dataRank = res.data.data.results
+          this.total = res.data.data.totalRow
+          this.dataRank = res.data.data.records
           bar.hideLoading()
         })
       },
@@ -171,7 +170,7 @@
         let [usernames, scores] = [[], []]
         rankData.forEach(ele => {
           usernames.push(ele.user.username)
-          scores.push(ele.total_score)
+          scores.push(ele.totalScore)
         })
         this.options.xAxis[0].data = usernames
         this.options.series[0].data = scores

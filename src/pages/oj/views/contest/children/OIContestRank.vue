@@ -30,12 +30,8 @@
       <ECharts :options="options" ref="chart" auto-resize></ECharts>
     </div>
     <Table ref="tableRank" class="auto-resize" :columns="columns" :data="dataRank" disabled-hover></Table>
-    <Pagination :total="total"
-                :page-size.sync="limit"
-                :current.sync="page"
-                @on-change="getContestRankData"
-                @on-page-size-change="getContestRankData(1)"
-                show-sizer></Pagination>
+    <Pagination :total="total" :page-size.sync="limit" :current.sync="page" @on-change="getContestRankData"
+      @on-page-size-change="getContestRankData(1)" show-sizer></Pagination>
   </Panel>
 </template>
 <script>
@@ -55,7 +51,7 @@
       return {
         total: 0,
         page: 1,
-        contestID: '',
+        contestId: '',
         columns: [
           {
             align: 'center',
@@ -98,7 +94,7 @@
                     })
                   }
                 }
-              }, params.row.total_score)
+              }, params.row.totalScore)
             }
           }
         ],
@@ -162,11 +158,11 @@
       }
     },
     mounted () {
-      this.contestID = this.$route.params.contestID
+      this.contestId = this.$route.params.contestId
       this.getContestRankData(1)
       if (this.contestProblems.length === 0) {
         this.getContestProblems().then((res) => {
-          this.addTableColumns(res.data.data)
+          this.addTableColumns(res.data.data.records)
         })
       } else {
         this.addTableColumns(this.contestProblems)
@@ -178,7 +174,7 @@
         let [usernames, scores] = [[], []]
         rankData.forEach(ele => {
           usernames.push(ele.user.username)
-          scores.push(ele.total_score)
+          scores.push(ele.totalScore)
         })
         this.options.xAxis[0].data = usernames
         this.options.series[0].data = scores
@@ -189,9 +185,9 @@
         // 从submission_info中取出相应的problem_id 放入到父object中,这么做主要是为了适应iview table的data格式
         // 见https://www.iviewui.com/components/table
         dataRank.forEach((rank, i) => {
-          let info = rank.submission_info
-          Object.keys(info).forEach(problemID => {
-            dataRank[i][problemID] = info[problemID]
+          let info = rank.submissionInfo
+          Object.keys(info).forEach(problemId => {
+            dataRank[i][problemId] = info[problemId]
           })
         })
         this.dataRank = dataRank
@@ -211,13 +207,13 @@
                     this.$router.push({
                       name: 'contest-problem-details',
                       params: {
-                        contestID: this.contestID,
-                        problemID: problem._id
+                        contestId: this.contestId,
+                        problemId: problem.displayId
                       }
                     })
                   }
                 }
-              }, problem._id)
+              }, problem.displayId)
             },
             render: (h, params) => {
               return h('span', params.row[problem.id])
@@ -226,31 +222,33 @@
         })
       },
       downloadRankCSV () {
-        utils.downloadFile(`contest_rank?download_csv=1&contest_id=${this.$route.params.contestID}&force_refrash=${this.forceUpdate ? '1' : '0'}`)
+        utils.downloadFile(`contest_rank?download_csv=1&contest_id=${this.$route.params.contestId}&force_refrash=${this.forceUpdate ? '1' : '0'}`)
       }
     }
   }
 </script>
 <style scoped lang="less">
-  .echarts {
-    margin: 20px auto;
-    height: 400px;
-    width: 98%;
-  }
+.echarts {
+  margin: 20px auto;
+  height: 400px;
+  width: 98%;
+}
 
-  .screen-full {
-    margin-right: 8px;
-  }
+.screen-full {
+  margin-right: 8px;
+}
 
-  #switches {
-    p {
-      margin-top: 5px;
-      &:first-child {
-        margin-top: 0;
-      }
-      span {
-        margin-left: 8px;
-      }
+#switches {
+  p {
+    margin-top: 5px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    span {
+      margin-left: 8px;
     }
   }
+}
 </style>

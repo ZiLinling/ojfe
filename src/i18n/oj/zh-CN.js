@@ -57,7 +57,7 @@ export const m = {
   Force_Update: '强制刷新',
   download_csv: '下载 csv',
   TotalTime: '总时间',
-  Top_10_Teams: '前 10 强队伍',
+  Top_10_Teams: '前 10 ',
   save_as_image: '保存图片',
   // ACMHelper.vue
   ACM_Helper: 'ACM 助手',

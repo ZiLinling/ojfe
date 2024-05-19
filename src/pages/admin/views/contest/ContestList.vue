@@ -16,50 +16,55 @@
         style="width: 100%">
         <el-table-column type="expand">
           <template slot-scope="props">
-            <p>Start Time: {{props.row.start_time | localtime }}</p>
-            <p>End Time: {{props.row.end_time | localtime }}</p>
-            <p>Create Time: {{props.row.create_time | localtime}}</p>
-            <p>Creator: {{props.row.created_by.username}}</p>
+            <p>{{$t('m.Contest_Start_Time')}}: {{props.row.startTime}}</p>
+            <p>{{$t('m.Contest_End_Time')}}: {{props.row.endTime}}</p>
+            <p>{{$t('m.Create_Time')}}: {{props.row.createTime}}</p>
+            <p>{{$t('m.Creator')}}: {{props.row.creator}}</p>
           </template>
         </el-table-column>
         <el-table-column
           prop="id"
           width="80"
-          label="ID">
+          label="ID"
+          align="center">
         </el-table-column>
         <el-table-column
           prop="title"
-          label="Title">
+          label="Title"
+          align="center">
         </el-table-column>
         <el-table-column
           label="Rule Type"
-          width="130">
+          width="130"
+          align="center">
           <template slot-scope="scope">
-            <el-tag type="gray">{{scope.row.rule_type}}</el-tag>
+            <el-tag type="gray">{{scope.row.ruleType}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
           label="Contest Type"
-          width="180">
+          width="180"
+          align="center">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.contest_type === 'Public' ? 'success' : 'primary'">
-              {{ scope.row.contest_type}}
-            </el-tag>
+            <el-tag v-if="scope.row.contestType === 'Public'" type="success">{{$t('m.Public')}}</el-tag>
+            <el-tag v-else type="primary">{{$t('m.Password_Protected')}} </el-tag>
           </template>
         </el-table-column>
         <el-table-column
           label="Status"
-          width="130">
+          width="130"
+          align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.status === '-1' ? 'danger' : scope.row.status === '0' ? 'success' : 'primary'">
-              {{ scope.row.status | contestStatus}}
+              :type="scope.row.status === -1 ? 'danger' : scope.row.status === 0 ? 'success' : 'primary'">
+              {{ $t('m.'+contestStatus(scope.row.status))}}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column
           width="100"
-          label="Visible">
+          label="Visible"
+          align="center">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.visible"
                        active-text=""
@@ -71,14 +76,15 @@
         <el-table-column
           fixed="right"
           width="250"
-          label="Operation">
+          label="Operation"
+          align="center">
           <div slot-scope="scope">
             <icon-btn name="Edit" icon="edit" @click.native="goEdit(scope.row.id)"></icon-btn>
             <icon-btn name="Problem" icon="list-ol" @click.native="goContestProblemList(scope.row.id)"></icon-btn>
             <icon-btn name="Announcement" icon="info-circle"
                       @click.native="goContestAnnouncement(scope.row.id)"></icon-btn>
-            <icon-btn icon="download" name="Download Accepted Submissions"
-                      @click.native="openDownloadOptions(scope.row.id)"></icon-btn>
+            <!-- <icon-btn icon="download" name="Download Accepted Submissions"
+                      @click.native="openDownloadOptions(scope.row.id)"></icon-btn> -->
           </div>
         </el-table-column>
       </el-table>
@@ -126,12 +132,10 @@
     mounted () {
       this.getContestList(this.currentPage)
     },
-    filters: {
+    methods: {
       contestStatus (value) {
         return CONTEST_STATUS_REVERSE[value].name
-      }
-    },
-    methods: {
+      },
       // 切换页码回调
       currentChange (page) {
         this.currentPage = page
@@ -139,10 +143,10 @@
       },
       getContestList (page) {
         this.loading = true
-        api.getContestList((page - 1) * this.pageSize, this.pageSize, this.keyword).then(res => {
+        api.getContestList(page, this.pageSize, this.keyword).then(res => {
           this.loading = false
-          this.total = res.data.data.total
-          this.contestList = res.data.data.results
+          this.total = res.data.data.totalRow
+          this.contestList = res.data.data.records
         }, res => {
           this.loading = false
         })

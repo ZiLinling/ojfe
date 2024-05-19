@@ -173,7 +173,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item :label="$t('m.TestCase')" :error="error.testcase">
-              <el-upload action="/api/admin/test_case" name="file" :data="{ spj: problem.spj }" :show-file-list="true"
+              <el-upload action="/api/problem/test_case" name="file" :data="{ spj: problem.spj }" :show-file-list="true"
                 :on-success="uploadSucceeded" :on-error="uploadFailed">
                 <el-button size="small" type="primary" icon="el-icon-fa-upload">Choose File</el-button>
               </el-upload>
@@ -309,18 +309,16 @@ export default {
         source: '',
         ioMode: { 'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt' }
       }
-      let contestID = this.$route.params.contestId
-      if (contestID) {
-        this.problem.contest_id = this.reProblem.contestId = contestID
+      let contestId = this.$route.params.contestId
+      if (contestId) {
+        this.problem.contestId = this.reProblem.contestId = contestId
         this.disableRuleType = true
-        api.getContest(contestID).then(res => {
+        api.getContest(contestId).then(res => {
           this.problem.ruleType = this.reProblem.ruleType = res.data.data.ruleType
           this.contest = res.data.data
         })
       }
-
       this.problem.spjLanguage = 'C'
-
       let allLanguage = res.data.data
       this.allLanguage = allLanguage
 
@@ -350,7 +348,8 @@ export default {
       this.$refs.form.resetFields()
       this.problem = this.reProblem
     },
-    'problem.languages'(newVal) {
+    'problem.languages'(newVal) 
+    {
       let data = {}
       // use deep copy to avoid infinite loop
       let languages = JSON.parse(JSON.stringify(newVal)).sort()
@@ -532,7 +531,7 @@ export default {
         'create-contest-problem': 'createContestProblem',
         'edit-contest-problem': 'editContestProblem'
       }[this.routeName]
-      // edit contest problem 时, contest_id会被后来的请求覆盖掉
+      // edit contest problem 时, contestId会被后来的请求覆盖掉
       if (funcName === 'editContestProblem') {
         this.problem.contestId = this.contest.id
       }

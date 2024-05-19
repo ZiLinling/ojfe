@@ -10,13 +10,13 @@
           <div class="contest-content">
             <div class="contest-content-tags">
               <Button type="info" shape="circle" size="small" icon="md-calendar">
-                {{ contest.start_time | localtime('YYYY-M-D HH:mm') }}
+                {{ contest.startTime }}
               </Button>
               <Button type="success" shape="circle" size="small" icon="md-time">
-                {{ getDuration(contest.start_time, contest.end_time) }}
+                {{ getDuration(contest.startTime, contest.endTime) }}
               </Button>
               <Button type="warning" shape="circle" size="small" icon="md-trophy">
-                {{ contest.rule_type }}
+                {{ contest.ruleType }}
               </Button>
             </div>
             <div class="contest-content-description">
@@ -61,7 +61,7 @@ export default {
     goContest() {
       this.$router.push({
         name: 'contest-details',
-        params: { contestID: this.contests[this.index].id }
+        params: { contestId: this.contests[this.index].id }
       })
     }
   }

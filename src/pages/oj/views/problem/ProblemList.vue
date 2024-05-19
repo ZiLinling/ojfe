@@ -51,10 +51,10 @@
         :disabled="query.tag === tag.name" shape="circle" class="tag-btn">{{ tag.name }}
       </Button>
 
-      <Button long id="pick-one" @click="pickone">
+      <!-- <Button long id="pick-one" @click="pickone">
         <Icon type="shuffle"></Icon>
         {{ $t('m.Pick_One') }}
-      </Button>
+      </Button> -->
     </Panel>
     <Spin v-if="loadings.tag" fix size="large"></Spin>
     </Col>
@@ -90,7 +90,11 @@ export default {
               },
               on: {
                 click: () => {
-                  this.$router.push({ name: 'problem-details', params: { problemID: params.row.displayId } })
+                  let routeUrl = this.$router.resolve({
+                    name: 'problem-details',
+                    params: { problemId: params.row.displayId }
+                  });
+                  window.open(routeUrl.href, '_blank');
                 }
               },
               style: {
@@ -112,7 +116,7 @@ export default {
                 click: () => {
                   let routeUrl = this.$router.resolve({
                     name: 'problem-details',
-                    params: { problemID: params.row.displayId }
+                    params: { problemId: params.row.displayId }
                   });
                   window.open(routeUrl.href, '_blank');
                 }
@@ -257,7 +261,7 @@ export default {
     pickone() {
       api.pickone().then(res => {
         this.$success('Good Luck')
-        this.$router.push({ name: 'problem-details', params: { problemID: res.data.data } })
+        this.$router.push({ name: 'problem-details', params: { problemId: res.data.data } })
       })
     }
   },

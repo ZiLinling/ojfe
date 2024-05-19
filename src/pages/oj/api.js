@@ -124,10 +124,10 @@ export default {
   pickone() {
     return ajax('pickone', 'get')
   },
-  getProblem(problemID) {
-    return ajax('problem', 'get', {
+  getProblem(problemId) {
+    return ajax('problem/get', 'get', {
       params: {
-        displayId: problemID
+        displayId: problemId
       }
     })
   },
@@ -148,46 +148,46 @@ export default {
     })
   },
   getContest(id) {
-    return ajax('contest', 'get', {
+    return ajax('contest/get', 'get', {
       params: {
         id
       }
     })
   },
-  getContestAccess(contestID) {
+  getContestAccess(contestId) {
     return ajax('contest/access', 'get', {
       params: {
-        contest_id: contestID
+        contestId: contestId
       }
     })
   },
-  checkContestPassword(contestID, password) {
-    return ajax('contest/password', 'post', {
-      data: {
-        contest_id: contestID,
+  checkContestPassword(contestId, password) {
+    return ajax('contest/access', 'get', {
+      params: {
+        contestId: contestId,
         password
       }
     })
   },
   getContestAnnouncementList(contestId) {
-    return ajax('contest/announcement', 'get', {
+    return ajax('announcement/list', 'get', {
       params: {
-        contest_id: contestId
+        contestId: contestId
       }
     })
   },
   getContestProblemList(contestId) {
-    return ajax('contest/problem', 'get', {
+    return ajax('problem/list', 'get', {
       params: {
-        contest_id: contestId
+        contestId: contestId
       }
     })
   },
-  getContestProblem(problemID, contestID) {
-    return ajax('contest/problem', 'get', {
+  getContestProblem(problemId, contestId) {
+    return ajax('problem/get', 'get', {
       params: {
-        contest_id: contestID,
-        problem_id: problemID
+        contestId: contestId,
+        displayId: problemId
       }
     })
   },
@@ -203,10 +203,10 @@ export default {
       params
     })
   },
-  getContestSubmissionList(offset, limit, params) {
+  getContestSubmissionList(page, limit, params) {
     params.limit = limit
-    params.offset = offset
-    return ajax('contest_submissions', 'get', {
+    params.page = page
+    return ajax('submission/list', 'get', {
       params
     })
   },
@@ -217,10 +217,10 @@ export default {
       }
     })
   },
-  submissionExists(problemID) {
+  submissionExists(problemId) {
     return ajax('submission/exist', 'get', {
       params: {
-        problemId: problemID
+        problemId: problemId
       }
     })
   },
@@ -232,24 +232,30 @@ export default {
     })
   },
   updateSubmission(data) {
-    return ajax('submission', 'put', {
+    return ajax('submission/update', 'put', {
       data
     })
   },
-  getUserRank(offset, limit, rule = 'acm') {
+  getUserRank(page, limit, rule = 'acm') {
     let params = {
-      offset,
+      page,
       limit,
       rule
     }
-    return ajax('user_rank', 'get', {
+    return ajax('profile/user_rank', 'get', {
       params
     })
   },
-  getContestRank(params) {
-    return ajax('contest_rank', 'get', {
-      params
-    })
+  getContestRank(params,rule) {
+    if(rule==='ACM'){
+      return ajax('acmContest/rank', 'get', {
+        params
+      })
+    }else{
+      return ajax('oiContest/rank', 'get', {
+        params
+      })
+    }
   },
   getACMACInfo(params) {
     return ajax('admin/contest/acm_helper', 'get', {

@@ -22,11 +22,6 @@
         <li>{{$t('m.About_presentation_error')}}
           <p>{{$t('m.About_presentation_error_answer_part_1')}} <b>{{$t('m.last')}}</b> {{$t('m.About_presentation_error_answer_part_2')}} <code> {{$t('m.Wrong_Answer')}}</code>.</p>
         </li>
-        <li>{{$t('m.How_to_report_bugs')}}
-          <p>{{$t('m.How_to_report_bugs_answer_part_1')}} <a href="https://github.com/QingdaoU/OnlineJudge">Github</a>
-            {{$t('m.How_to_report_bugs_answer_part_2')}}
-          </p>
-        </li>
       </ul>
     </div>
   </panel>

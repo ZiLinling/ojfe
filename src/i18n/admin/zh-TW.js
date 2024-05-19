@@ -103,6 +103,11 @@ export const m = {
   Contest_Status: '狀態',
   Allowed_IP_Ranges: '允許的 IP 範圍',
   CIDR_Network: 'CIDR Network',
+  Underway: '正在進行',
+  Not_Started: '未開始',
+  Ended: '已結束',
+  Public: '公開',
+  Password_Protected: '密碼保護',
   // Dashboard.vue
   Last_Login: '最後登入時間',
   Last_Status: '最後登入狀態',
@@ -112,4 +117,5 @@ export const m = {
   Force_HTTPS: '強制 HTTPS',
   CDN_HOST: 'CDN HOST',
   Logout: '登出',
+  Creator: '創建者'
 }

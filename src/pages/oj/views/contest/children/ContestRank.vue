@@ -10,24 +10,16 @@
   import ACMContestRank from './ACMContestRank.vue'
   import OIContestRank from './OIContestRank.vue'
 
-  const NullComponent = {
-    name: 'null-component',
-    template: '<div></div>'
-  }
 
   export default {
     name: 'contest-rank',
     components: {
       ACMContestRank,
       OIContestRank,
-      NullComponent
     },
     computed: {
       ...mapGetters(['contestRuleType']),
       currentView () {
-        if (this.contestRuleType === null) {
-          return 'NullComponent'
-        }
         return this.contestRuleType === 'ACM' ? 'ACMContestRank' : 'OIContestRank'
       }
     },

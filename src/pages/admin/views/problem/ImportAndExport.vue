@@ -14,32 +14,35 @@
                 v-loading="loadingProblems" @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          width="60">
+          width="60"
+          align="center">
         </el-table-column>
         <el-table-column
           label="ID"
           width="100"
-          prop="id">
+          prop="id"
+          align="center">
         </el-table-column>
         <el-table-column
           label="DisplayID"
           width="200"
-          prop="_id">
+          prop="displayId"
+          align="center">
         </el-table-column>
         <el-table-column
           label="Title"
-          prop="title">
+          prop="title"
+          align="center">
         </el-table-column>
         <el-table-column
-          prop="created_by.username"
-          label="Author">
+          prop="creator"
+          label="Author"
+          align="center">
         </el-table-column>
         <el-table-column
-          prop="create_time"
-          label="Create Time">
-          <template slot-scope="scope">
-            {{scope.row.create_time | localtime }}
-          </template>
+          prop="createTime"
+          label="Create Time"
+          align="center">
         </el-table-column>
       </el-table>
 
@@ -123,13 +126,13 @@
       getProblems (page = 1) {
         let params = {
           keyword: this.keyword,
-          offset: (page - 1) * this.limit,
+          page:page,
           limit: this.limit
         }
         this.loadingProblems = true
         api.getProblemList(params).then(res => {
-          this.problems = res.data.data.results
-          this.total = res.data.data.total
+          this.problems = res.data.data.records
+          this.total = res.data.data.totalRow
           this.loadingProblems = false
         })
       },

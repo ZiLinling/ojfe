@@ -71,7 +71,7 @@
     </el-dialog>
     <el-dialog title="Add Contest Problem" v-if="contestId" width="80%" :visible.sync="addProblemDialogVisible"
       @close-on-click-modal="false">
-      <add-problem-component :contestID="contestId" @on-change="getProblemList"></add-problem-component>
+      <add-problem-component :contestId="contestId" @on-change="getProblemList"></add-problem-component>
     </el-dialog>
   </div>
 </template>
@@ -139,7 +139,7 @@ export default {
         limit: this.pageSize,
         page: page,
         keyword: this.keyword,
-        contest_id: this.contestId
+        contestId: this.contestId
       }
       api[funcName](params).then(res => {
         this.loading = false
@@ -157,16 +157,19 @@ export default {
         type: 'warning'
       }).then(() => {
         let funcName = this.routeName === 'problem-list' ? 'deleteProblem' : 'deleteContestProblem'
-        api[funcName](id).then(() => [
-          this.getProblemList(this.currentPage - 1)
-        ]).catch(() => {
+        api[funcName](id).then(() => {
+          if (this.problemList.length === 1&&this.total!==1) {
+            this.currentPage = this.currentPage - 1
+          }
+          this.getProblemList(this.currentPage)
+        }).catch(() => {
         })
       }, () => {
       })
     },
-    makeContestProblemPublic(problemID) {
+    makeContestProblemPublic(problemId) {
       this.$prompt('Please input display id for the public problem', 'confirm').then(({ value }) => {
-        api.makeContestProblemPublic({ id: problemID, displayId: value }).catch()
+        api.makeContestProblemPublic({ id: problemId, displayId: value }).catch()
       }, () => {
       })
     },
@@ -174,7 +177,7 @@ export default {
       let data = Object.assign({}, row)
       let funcName = ''
       if (this.contestId) {
-        data.contest_id = this.contestId
+        data.contestId = this.contestId
         funcName = 'editContestProblem'
       } else {
         funcName = 'editProblem'
@@ -190,8 +193,8 @@ export default {
       this.currentRow = row
       this.InlineEditDialogVisible = true
     },
-    downloadTestCase(problemID) {
-      let url = '/admin/test_case?problem_id=' + problemID
+    downloadTestCase(problemId) {
+      let url = '/problem/test_case?problemId=' + problemId
       utils.downloadFile(url)
     },
     getPublicProblem() {
